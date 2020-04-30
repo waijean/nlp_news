@@ -1,6 +1,10 @@
-# Project Title
+# nlp_news
 
-One Paragraph of project description goes here
+The project's aim is to use Natural Language Processing (NLP) to perform sentiment analysis on news 
+articles and pass that as a feature to predict exchange traded fund (ETF) prices.
+
+News website: https://inshorts.com/en/read/business  
+Stock price: https://markets.ft.com/data/etfs/tearsheet/historical?s=VEVE
 
 ## Getting Started
 
