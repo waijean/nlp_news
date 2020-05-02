@@ -4,11 +4,17 @@ repos:
     -   id: black
         name: black
         entry: black
+        stages: [commit]
         language: system
         types: [python]
 
--   repo: local
-    hooks:
+    -   id: mypy
+        name: mypy
+        stages: [commit]
+        entry: mypy
+        language: system
+        types: [python]
+
     -   id: nbstripout
         name: nbstripout
         entry: nbstripout
