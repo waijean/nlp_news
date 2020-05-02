@@ -1,0 +1,10 @@
+black==19.10b0
+bs4==0.0.1
+nbstripout==0.3.7
+numpy==1.18.3
+pandas==1.0.3
+pre-commit==2.3.0
+pyarrow==0.17.0
+pytest==5.4.1
+requests==2.23.0
+
