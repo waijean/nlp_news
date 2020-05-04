@@ -1,6 +1,8 @@
 [run]
-source = .
+source = web_scraping
 
 omit = tests/*
        venv/*
        utils/*
+       .mypy_cache/*
+
