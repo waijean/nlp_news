@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 @logging_time(level=logging.DEBUG)
 def drop_null_rows(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    drop null rows if any of the columns contain null values
+    """
     logger.info(f"Number of rows before dropping null: {df.shape}")
     new_df = df.dropna(axis=0)
     logger.info(f"Number of rows after dropping null: {new_df.shape}")
