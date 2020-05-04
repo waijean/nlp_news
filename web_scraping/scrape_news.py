@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-from utils.constants import COL_CATEGORY, COL_ARTICLE, COL_HEADLINE, COL_DATE
+from utils.constants import COL_CATEGORY, COL_ARTICLE, COL_HEADLINE, COL_DATE, DATA_PATH
 
 seed_urls = [
     "https://inshorts.com/en/read/politics",
@@ -54,8 +54,8 @@ def add_date_col(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-def export_df(df: pd.DataFrame, dir: str, file_name: str):
-    file_path = os.path.join(dir, file_name)
+def export_df(df: pd.DataFrame, path: str, file_name: str):
+    file_path = os.path.join(path, file_name)
     df.to_parquet(file_path)
 
 
@@ -65,6 +65,6 @@ if __name__ == "__main__":
     news_df = add_date_col(news_df)
     export_df(
         news_df,
-        dir="data",
+        path=DATA_PATH,
         file_name=f"{datetime.now().strftime('%Y%m%dT%H%M%S')}_data_v1.parquet",
     )
