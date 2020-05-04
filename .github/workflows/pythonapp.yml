@@ -30,7 +30,7 @@ jobs:
         pip install -r requirements.txt
     - name: Test with pytest
       run: |
-        pytest 
+        pytest tests/
     - name: Test coverage
       run: |
-        pytest --cov --cov-fail-under=60         
+        pytest tests/ --cov --cov-fail-under=60         

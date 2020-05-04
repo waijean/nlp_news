@@ -8,12 +8,7 @@ import numpy as np
 from datetime import datetime
 
 from utils.constants import COL_CATEGORY, COL_ARTICLE, COL_HEADLINE, COL_DATE, DATA_PATH
-
-seed_urls = [
-    "https://inshorts.com/en/read/politics",
-    "https://inshorts.com/en/read/business",
-    "https://inshorts.com/en/read/world",
-]
+from web_scraping.web_url import news_urls
 
 
 def build_dataset(seed_urls: List) -> List:
@@ -60,7 +55,7 @@ def export_df(df: pd.DataFrame, path: str, file_name: str):
 
 
 if __name__ == "__main__":
-    news_list = build_dataset(seed_urls)
+    news_list = build_dataset(news_urls)
     news_df = create_df_from_list(news_list)
     news_df = add_date_col(news_df)
     export_df(
