@@ -19,3 +19,13 @@ def expected_news_df():
 def working_dir(tmpdir_factory):
     fn = tmpdir_factory.mktemp("working_dir")
     return fn
+
+
+@pytest.fixture(scope="session")
+def expected_price_df():
+    return pd.DataFrame(
+        {
+            "Date": ["2020-01-01", "2020-01-02", "2020-01-03"],
+            "Close": [50.0, 50.1, 50.2],
+        }
+    )
