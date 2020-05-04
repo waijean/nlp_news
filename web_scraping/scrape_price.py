@@ -6,7 +6,7 @@ import logging.config
 from utils.constants import LOG_CONFIG_PATH
 from utils.helper import get_df_info_to_logger
 from web_scraping.scrape_news import export_df
-from web_scraping.validator import drop_null_rows
+from web_scraping.clean_price import drop_null_rows
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
