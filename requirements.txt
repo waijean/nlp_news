@@ -12,3 +12,4 @@ pytest-cov==2.8.1
 GitPython==3.1.1
 ipykernel==5.2.1
 plotly==4.6.0
+nb-black==1.0.7
