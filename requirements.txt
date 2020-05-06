@@ -4,7 +4,7 @@ pyarrow==0.17.0
 GitPython==3.1.1
 plotly==4.6.0
 scipy==1.4.1
-dask==2.15.0
+dask[dataframe]
 
 #utils
 pre-commit==2.3.0
