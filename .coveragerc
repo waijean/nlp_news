@@ -6,4 +6,5 @@ omit = tests/*
        venv/*
        utils/*
        .mypy_cache/*
+       data_pipeline/partition_news.py
 
