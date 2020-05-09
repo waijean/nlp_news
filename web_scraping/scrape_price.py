@@ -3,7 +3,7 @@ import requests
 from _datetime import datetime
 import logging.config
 
-from utils.constants import LOG_CONFIG_PATH, DATA_PATH
+from utils.constants import LOG_CONFIG_PATH, WEB_SCRAPING_DATA_PATH
 from utils.helper import get_df_info_to_logger
 from web_scraping.scrape_news import export_df
 from web_scraping.clean_price import drop_null_rows
@@ -44,6 +44,6 @@ if __name__ == "__main__":
     processed_price_df = drop_null_rows(price_df)
     export_df(
         processed_price_df,
-        path=DATA_PATH,
+        path=WEB_SCRAPING_DATA_PATH,
         file_name=f"{datetime.now().strftime('%Y%m%d')}_price_v1.parquet",
     )

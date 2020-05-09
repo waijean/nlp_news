@@ -7,7 +7,13 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-from utils.constants import COL_CATEGORY, COL_ARTICLE, COL_HEADLINE, COL_DATE, DATA_PATH
+from utils.constants import (
+    COL_CATEGORY,
+    COL_ARTICLE,
+    COL_HEADLINE,
+    COL_DATE,
+    WEB_SCRAPING_DATA_PATH,
+)
 from web_scraping.web_url import news_urls
 
 
@@ -60,6 +66,6 @@ if __name__ == "__main__":
     news_df = add_date_col(news_df)
     export_df(
         news_df,
-        path=DATA_PATH,
+        path=WEB_SCRAPING_DATA_PATH,
         file_name=f"{datetime.now().strftime('%Y%m%dT%H%M%S')}_data_v1.parquet",
     )
