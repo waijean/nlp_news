@@ -8,6 +8,9 @@ __pycache__/
 
 .coverage
 
+#logs
+logs/
+
 #data file
 data_pipeline/data/
 
