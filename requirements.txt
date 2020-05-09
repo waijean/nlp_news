@@ -5,7 +5,7 @@ GitPython==3.1.1
 plotly==4.6.0
 scipy==1.4.1
 dask[dataframe]
-dask distributed
+dask[distributed]
 
 #utils
 pre-commit==2.3.0
