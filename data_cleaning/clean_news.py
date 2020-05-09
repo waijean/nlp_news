@@ -1,5 +1,4 @@
 import re
-import string
 from itertools import filterfalse
 from typing import List
 
@@ -32,6 +31,11 @@ def tokenize(text: str) -> List:
 
 
 def remove_token_punctuation(tokenized_list: List) -> List:
+    """
+    Take a list of words and punctuations, remove standalone punctuations, and return only words
+
+    For example, it remove a standalone single quote "'", but not single quote in "can't"
+    """
     r = regex.compile("\p{P}+")
     tokenized_list_without_punc = list(filterfalse(r.match, tokenized_list))
     return tokenized_list_without_punc
