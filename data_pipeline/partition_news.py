@@ -1,4 +1,4 @@
-import logging
+import logging.config
 import os
 
 from utils.constants import DATA_PIPELINE_PATH, LOG_CONFIG_PATH
@@ -19,11 +19,11 @@ def set_up_client():
 
 def read_csv_dask(path):
     """
-    Best practices
+    Best practices:
     - Select only the columns that you plan to use
     - Specify dtypes directly using the dtype keyword. For datetime dtype, use parse_dates.
 
-    Notes
+    Notes:
     - For engine, 'c' is faster, while 'python' is currently more feature-complete
     - Set quoting as QUOTE_MINIMAL (0) as the csv file only quote fields with special characters
     - Set quotechar as "
