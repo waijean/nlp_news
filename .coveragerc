@@ -1,6 +1,7 @@
 [run]
 source = web_scraping
          data_pipeline
+         data_cleaning
 
 omit = tests/*
        venv/*
