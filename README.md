@@ -38,6 +38,17 @@ Idea:
 3. Use bash script to remove lines that don't start with proper index. This is to remove articles
 which have multiple lines which is suspected to be the root cause of the problem. 
  
+## Data Cleaning
+The data cleaning process is split into the following stages:
+1. Tokenize the articles into words by using WordPunctTokenizer from nltk library
+2. Remove standalone punctuations by using the regex library
+3. Remove stopwords by using the nltk library
+4. Lemmatize the words by using WordNetLemmatizer from nltk library (might switch to stemming due to
+speed concern) 
+
+## Data Preprocessing
+
+ 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for 
