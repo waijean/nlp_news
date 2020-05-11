@@ -50,7 +50,7 @@ def read_csv_dask(path):
     return df
 
 
-def drop_rows_with_null_section(df):
+def drop_rows_with_null_section_dask():
     logger.info(
         f"Number of null values in section column: {df['section'].isna().sum().compute()}"
     )
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     df = read_csv_dask(
         os.path.join(DATA_PIPELINE_PATH, "processed-all-the-news-2-1.csv")
     )
-    processed_df = df.pipe(drop_rows_with_null_section).pipe(process_date)
+    processed_df = df.pipe(drop_rows_with_null_section_dask).pipe(process_date)
     processed_df.to_parquet(
         os.path.join(DATA_PIPELINE_PATH, "news_v1.parquet"),
         engine="pyarrow",
