@@ -1,5 +1,6 @@
 import pytest
 import pandas as pd
+import numpy as np
 
 from utils.constants import COL_HEADLINE, COL_ARTICLE, COL_CATEGORY
 
@@ -362,3 +363,41 @@ def tokenized_list_lemmatize():
         "currently",
         "small",
     ]
+
+
+@pytest.fixture(scope="session")
+def article_col():
+    return pd.Series(
+        [
+            "this is the first document",
+            "this document is the second document",
+            "and this is the third one",
+            "is this the first document",
+        ]
+    )
+
+
+@pytest.fixture(scope="session")
+def X_count_df():
+    return pd.DataFrame(
+        np.array(
+            [[1, 1, 0, 0, 0], [2, 0, 0, 1, 0], [0, 0, 1, 0, 1], [1, 1, 0, 0, 0]],
+            dtype=np.int64,
+        ),
+        columns=["document", "first", "one", "second", "third"],
+    )
+
+
+@pytest.fixture(scope="session")
+def X_tfidf_df():
+    return pd.DataFrame(
+        np.array(
+            [
+                [0.6292275146695526, 0.7772211620785797, 0, 0, 0],
+                [0.78722297610404, 0.0, 0, 0.6166684570284895, 0.0],
+                [0.0, 0.0, 0.7071067811865476, 0.0, 0.7071067811865476],
+                [0.6292275146695526, 0.7772211620785797, 0.0, 0.0, 0.0],
+            ],
+            dtype=np.float64,
+        )
+    )
