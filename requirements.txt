@@ -8,6 +8,7 @@ dask[dataframe]
 dask[distributed]
 nltk==3.5
 textblob==0.15.3
+scikit-learn==0.22.2.post1
 
 #utils
 pre-commit==2.3.0

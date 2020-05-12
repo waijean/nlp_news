@@ -2,6 +2,7 @@
 source = web_scraping
          data_pipeline
          data_cleaning
+         data_preprocessing
 
 omit = tests/*
        venv/*
