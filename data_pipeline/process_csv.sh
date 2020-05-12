@@ -32,3 +32,9 @@ for file in $PREFIX*; do
   sed '1q;d' $file
 done && echo "Header row has been inserted"
 
+echo "Adding the start of news_csv_04 to the end of news_csv_03"
+sed -n '2,125p' data_pipeline/data/csv_partition/news_csv_04 >> data_pipeline/data/csv_partition/news_csv_03
+echo "Verify the end of news_csv_03"
+sed -n '712854,$p' data_pipeline/data/csv_partition/news_csv_03
+echo "Delete the start of news_csv_04"
+sed -i '2,125d' data_pipeline/data/csv_partition/news_csv_04

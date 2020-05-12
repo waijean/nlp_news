@@ -11,32 +11,28 @@ Stock price: https://www.sharesmagazine.co.uk/shares/share/VEVE/historic-prices
 Aim:
 - Extract only 4 columns (date, title, article and section)
 - Drop null section
-- Process date and convert to datetime dtype
+- Process columns to appropriate dtype
 - Convert csv into parquet file for faster loading and to preserve dtype
 
 Problem: 
 
 The original csv file (8.2GB) is too large to be loaded into RAM using pandas. Therefore, dask 
-has been tried to process the csv file. However, there might be incorrect line endings within the 
-columns and dask is not able to process those (https://github.com/dask/dask/issues/4145). If the 
-blank lines are removed from the original csv file and the original csv file is split into smaller 
-files (1GB each), dask is able to read the first csv partition using c engine. However, dask is still
-not able to read the whole csv file. 
+has been tried to process the csv file as dask automatically split the original csv file 
+into several partitions and process them separately. However, each line in the csv file is not 
+necessarily a new row. A row may span multiple lines if the article has multiple line breaks. This 
+becomes a problem when the partition divisions happens in the middle of article. This will throw a 
+"field larger than field limit (131072)" error because pandas can't find the correct line endings. 
 
-Current Solution:
+Solution:
 
-Pass in error_bad_lines as False to drop the error lines. According to the warning logs, majority of
-them are field larger than field limit (131072), with a couple of unexpected end of data and ',' 
-expected after '"'. This might indicate that some columns are being read incorrectly as a result
-of dropping erros lines. This might cause the date column to be read incorrectly and as a result 
-there is a large spike of articles on Jan 1 2019 (18k compared to median 1.3k). The number of null 
-values in section column is 905,493. 
+Therefore, bash script is used to remove the blank lines from the csv file and split the large csv 
+file into smaller chunks (max 1GB each so 9 smaller csv files in total). Then, each file is checked 
+to make sure that the partitions occur at the end of the article. It turns out that only the 
+news_csv_03 and news_csv_04 have incorrect divisions so manual effort is required to fix it. 
 
-Idea:
-1. Increase csv field limit but this might not solve unexpected end of data error
-2. Only process the first partition of csv file
-3. Use bash script to remove lines that don't start with proper index. This is to remove articles
-which have multiple lines which is suspected to be the root cause of the problem. 
+Once this is fixed, pandas can process each of the 9 csv files separately and convert each of them to 
+parquet file. Then, dask can be used to read the 9 parquet files collectively and process them in the
+next steps of our pipeline. 
  
 ## Data Cleaning
 The data cleaning process is split into the following stages:
