@@ -13,7 +13,7 @@ ROOT_DIR_PATH = repo.working_tree_dir
 LOG_CONFIG_PATH = os.path.join(ROOT_DIR_PATH, "utils/logging.conf")
 WEB_SCRAPING_DATA_PATH = os.path.join(ROOT_DIR_PATH, "web_scraping/data")
 DATA_PIPELINE_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data")
-CSV_PARTITION_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data/csv_partition")
+CSV_PARTITION_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data/partition_csv")
 PARQUET_PARTITION_PATH = os.path.join(
-    ROOT_DIR_PATH, "data_pipeline/data/parquet_partition"
+    ROOT_DIR_PATH, "data_pipeline/data/partition.parquet"
 )

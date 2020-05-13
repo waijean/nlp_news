@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATA_DIR=/d/dev/Project/nlp_news/data_pipeline/data/
-CSV_PARTITION_DIR=$DATA_DIR/csv_partition
+CSV_PARTITION_DIR=$DATA_DIR/partition_csv
 ORIGINAL_CSV_FILE=$DATA_DIR/all-the-news-2-1.csv
 OUTPUT_CSV_FILE=$DATA_DIR/processed-all-the-news-2-1.csv
 PYTHON_FILE=/d/dev/Project/nlp_news/data_pipeline/partition_news.py
@@ -33,8 +33,8 @@ for file in $PREFIX*; do
 done && echo "Header row has been inserted"
 
 echo "Adding the start of news_csv_04 to the end of news_csv_03"
-sed -n '2,125p' data_pipeline/data/csv_partition/news_csv_04 >> data_pipeline/data/csv_partition/news_csv_03
+sed -n '2,125p' $CSV_PARTITION_DIR/news_csv_04 >> $CSV_PARTITION_DIR/news_csv_03
 echo "Verify the end of news_csv_03"
-sed -n '712854,$p' data_pipeline/data/csv_partition/news_csv_03
+sed -n '712854,$p' $CSV_PARTITION_DIR/news_csv_03
 echo "Delete the start of news_csv_04"
-sed -i '2,125d' data_pipeline/data/csv_partition/news_csv_04
+sed -i '2,125d' $CSV_PARTITION_DIR/news_csv_04
