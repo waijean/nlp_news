@@ -2,10 +2,16 @@ import os
 
 import git
 
-COL_HEADLINE = "news_headline"
-COL_ARTICLE = "news_article"
-COL_CATEGORY = "news_category"
+# news df(web scrape)
+COL_HEADLINE = "headline"
+COL_ARTICLE = "article"
+COL_CATEGORY = "category"
 COL_DATE = "date"
+
+# news df
+COL_SECTION = "section"
+COL_TITLE = "title"
+
 
 repo = git.Repo(".", search_parent_directories=True)
 ROOT_DIR_PATH = repo.working_tree_dir
