@@ -11,7 +11,7 @@ from utils.constants import (
     COL_ARTICLE_POLARITY,
     COL_ARTICLE_SUBJECTIVITY,
     DATA_PREPROCESSING_PATH,
-    PARQUET_PARTITION_PATH,
+    PARQUET_PARTITION_V2_PATH,
     LOG_CONFIG_PATH,
 )
 import logging.config
@@ -41,8 +41,8 @@ def calculate_average_value_per_day(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # TODO convert reading and logging into utils function
-    logger.info(f"Reading {PARQUET_PARTITION_PATH}")
-    df = pd.read_parquet(PARQUET_PARTITION_PATH)
+    logger.info(f"Reading {PARQUET_PARTITION_V2_PATH}")
+    df = pd.read_parquet(PARQUET_PARTITION_V2_PATH)
     processed_df = (
         df.pipe(add_col_polarity, COL_TITLE)
         .pipe(add_col_subjectivity, COL_TITLE)
