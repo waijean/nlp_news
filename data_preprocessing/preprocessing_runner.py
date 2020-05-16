@@ -16,6 +16,8 @@ from utils.constants import (
 )
 import logging.config
 
+from utils.pipeline_abc import Pipeline
+
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
@@ -39,18 +41,41 @@ def calculate_average_value_per_day(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
+class PreprocessingPipelineNews(Pipeline):
+
+    _df: pd.DataFrame
+    _processed_df: pd.DataFrame
+
+    @classmethod
+    def extract(cls):
+        cls._read_path = PARQUET_PARTITION_V2_PATH
+        super().extract()
+        cls._df = pd.read_parquet(cls._read_path)
+
+    @classmethod
+    def transform(cls):
+        super().transform()
+        processed_df = (
+            cls._df.pipe(add_col_polarity, COL_TITLE)
+            .pipe(add_col_subjectivity, COL_TITLE)
+            .pipe(add_col_polarity, COL_ARTICLE)
+            .pipe(add_col_subjectivity, COL_ARTICLE)
+            .pipe(calculate_average_value_per_day)
+        )
+        cls._processed_df = processed_df
+
+    @classmethod
+    def load(cls):
+        cls._write_path = DATA_PREPROCESSING_PATH
+        super().load()
+        cls._processed_df.to_parquet(
+            os.path.join(cls._write_path, "news_feature.parquet")
+        )
+
+    @classmethod
+    def main(cls):
+        super().main()
+
+
 if __name__ == "__main__":
-    # TODO convert reading and logging into utils function
-    logger.info(f"Reading {PARQUET_PARTITION_V2_PATH}")
-    df = pd.read_parquet(PARQUET_PARTITION_V2_PATH)
-    processed_df = (
-        df.pipe(add_col_polarity, COL_TITLE)
-        .pipe(add_col_subjectivity, COL_TITLE)
-        .pipe(add_col_polarity, COL_ARTICLE)
-        .pipe(add_col_subjectivity, COL_ARTICLE)
-        .pipe(calculate_average_value_per_day)
-    )
-    logger.info(f"Writing to {DATA_PREPROCESSING_PATH}")
-    processed_df.to_parquet(
-        os.path.join(DATA_PREPROCESSING_PATH, "news_feature.parquet")
-    )
+    PreprocessingPipelineNews.main()
