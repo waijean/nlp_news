@@ -54,6 +54,11 @@ def input_price_df():
 
 
 @pytest.fixture(scope="session")
+def input_text_df(input_text):
+    return pd.DataFrame({COL_ARTICLE: [input_text]})
+
+
+@pytest.fixture(scope="session")
 def input_text():
     return """
     \tMr Shapps said that any announcement of a change in strategy — including the imposition of quarantine arrangements 
