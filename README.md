@@ -12,7 +12,7 @@ Aim:
 - Extract only 4 columns (date, title, article and section)
 - Drop null section
 - Process columns to appropriate dtype
-- Convert csv into parquet file for faster loading and to preserve dtype
+- Convert csv into parquet file for faster loading and to preserve dtype 
 
 Problem: 
 
@@ -33,6 +33,32 @@ news_csv_03 and news_csv_04 have incorrect divisions so manual effort is require
 Once this is fixed, pandas can process each of the 9 csv files separately and convert each of them to 
 parquet file. Then, dask can be used to read the 9 parquet files collectively and process them in the
 next steps of our pipeline. 
+
+Result:
+Dropping the null section reduces the size of the dataset from 2.7m rows to 1.7m rows with average 
+1143 articles per day. 
+
+The top 20 sections are listed below:
+Market News                  108724
+World News                   108651
+Business News                 96395
+Wires                         67352
+Financials                    57845
+politics                      53496
+us                            51242
+Intel                         39805
+Bonds News                    39672
+Politics                      33875
+Healthcare                    30883
+world                         28530
+opinion                       27465
+Consumer Goods and Retail     26766
+Sports News                   26324
+business                      25335
+tv                            24783
+sports                        23909
+Tech                          21605
+arts                          21230
  
 ## Data Cleaning
 The data cleaning process is split into the following stages:

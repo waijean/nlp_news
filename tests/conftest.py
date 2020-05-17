@@ -2,7 +2,16 @@ import pytest
 import pandas as pd
 import numpy as np
 
-from utils.constants import COL_HEADLINE, COL_ARTICLE, COL_CATEGORY
+from utils.constants import (
+    COL_HEADLINE,
+    COL_ARTICLE,
+    COL_CATEGORY,
+    COL_DATE,
+    COL_CLOSE,
+    COL_VOLUME,
+    COL_OPEN,
+    COL_PRICE_DATE,
+)
 
 
 @pytest.fixture
@@ -30,6 +39,23 @@ def expected_price_df():
             "Close": [50.0, 50.1, 50.2],
         }
     )
+
+
+@pytest.fixture(scope="session")
+def input_price_df():
+    return pd.DataFrame(
+        {
+            COL_PRICE_DATE: ["2020-01-01", "2020-01-02", "2020-01-03", "2020-01-04"],
+            COL_OPEN: [50.0, 50.3, 0.0, 50.5],
+            COL_CLOSE: [50.1, 50.2, 50.4, 50.5],
+            COL_VOLUME: [1000, 1000, 1000, 0],
+        }
+    )
+
+
+@pytest.fixture(scope="session")
+def input_text_df(input_text):
+    return pd.DataFrame({COL_ARTICLE: [input_text]})
 
 
 @pytest.fixture(scope="session")

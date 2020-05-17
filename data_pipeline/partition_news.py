@@ -1,7 +1,14 @@
 import logging.config
 import os
 
-from utils.constants import DATA_PIPELINE_PATH, LOG_CONFIG_PATH
+from utils.constants import (
+    DATA_PIPELINE_PATH,
+    LOG_CONFIG_PATH,
+    COL_DATE,
+    COL_TITLE,
+    COL_ARTICLE,
+    COL_SECTION,
+)
 
 import dask.dataframe as dd
 from dask.distributed import Client, LocalCluster
@@ -35,9 +42,9 @@ def read_csv_dask(path):
     """
     df = dd.read_csv(
         path,
-        usecols=["date", "title", "article", "section"],
-        dtype={"date": str, "title": str, "article": str, "section": str},
-        # parse_dates=["date"],
+        usecols=[COL_DATE, COL_TITLE, COL_ARTICLE, COL_SECTION],
+        dtype={COL_DATE: str, COL_TITLE: str, COL_ARTICLE: str, COL_SECTION: str},
+        # parse_dates=[COL_DATE],
         engine="python",
         encoding="utf8",
         quoting=0,
@@ -52,9 +59,9 @@ def read_csv_dask(path):
 
 def drop_rows_with_null_section_dask():
     logger.info(
-        f"Number of null values in section column: {df['section'].isna().sum().compute()}"
+        f"Number of null values in section column: {df[COL_SECTION].isna().sum().compute()}"
     )
-    new_df = df.dropna(subset=["section"])
+    new_df = df.dropna(subset=[COL_SECTION])
     return new_df
 
 
@@ -64,8 +71,8 @@ def process_date(df):
     Convert date column dtype to datetime
     """
     logger.info("Processing date")
-    normal_date_df = df[df.date.str.contains("^[0-9]+", na=False)]
-    normal_date_df.date = dd.to_datetime(normal_date_df.date)
+    normal_date_df = df[df[COL_DATE].str.contains("^[0-9]+", na=False)]
+    normal_date_df[COL_DATE] = dd.to_datetime(normal_date_df[COL_DATE])
     logger.info("Date column converted to datetime format")
     return normal_date_df
 
