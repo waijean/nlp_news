@@ -3,7 +3,11 @@ import os
 import pandas as pd
 
 from utils.constants import COL_DATE
-from web_scraping.scrape_news import create_df_from_list, add_date_col, export_df
+from data_engineering.web_scraping.scrape_news import (
+    create_df_from_list,
+    add_date_col,
+    export_df,
+)
 
 
 def test_create_df(expected_news_df):

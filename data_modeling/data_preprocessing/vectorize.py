@@ -2,8 +2,8 @@ from typing import List, Tuple
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
-from data_cleaning.clean_news import full_tokenize
-from data_cleaning.normalize import lemmatize
+from data_modeling.data_cleaning.clean_news import full_tokenize
+from data_modeling.data_cleaning.normalize import lemmatize
 
 from scipy.sparse import csr_matrix
 import pandas as pd

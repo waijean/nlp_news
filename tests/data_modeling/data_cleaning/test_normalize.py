@@ -1,4 +1,4 @@
-from data_cleaning.normalize import stemming, lemmatize
+from data_modeling.data_cleaning.normalize import stemming, lemmatize
 
 
 def test_stemming(tokenized_list_no_stopwords, tokenized_list_stemming):

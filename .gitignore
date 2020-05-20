@@ -13,7 +13,7 @@ logs/
 
 #data file
 data_pipeline/data/
-data_preprocessing/data/
+data_modeling/data_preprocessing/data/
 
 #notebooks
 notebooks/.ipynb_checkpoints/
