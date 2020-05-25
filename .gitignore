@@ -12,8 +12,10 @@ __pycache__/
 logs/
 
 #data file
-data_pipeline/data/
+data_engineering/data_pipeline/news/data/
+data_engineering/data_pipeline/price/data/
 data_modeling/data_preprocessing/data/
+data_pipeline/data
 
 #notebooks
 notebooks/.ipynb_checkpoints/
