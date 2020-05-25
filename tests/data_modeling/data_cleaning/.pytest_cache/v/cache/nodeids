@@ -1,0 +1,10 @@
+[
+  "test_clean.py::test_import_stopwords",
+  "test_clean_news.py::test_remove_punctuation",
+  "test_clean_news.py::test_remove_stopwords",
+  "test_clean_news.py::test_tokenize",
+  "test_clean_news.py::test_full_tokenize",
+  "test_clean_news.py::test_remove_token_punctuation",
+  "test_normalize.py::test_stemming",
+  "test_normalize.py::test_lemmatize"
+]

@@ -1,4 +1,4 @@
-from data_preprocessing.vectorize import count_vectorize, transform_tfidf
+from data_modeling.data_preprocessing.vectorize import count_vectorize, transform_tfidf
 import pandas as pd
 
 

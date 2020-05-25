@@ -1,7 +1,6 @@
 [run]
-source = web_scraping
-         data_cleaning
-         data_preprocessing
+source = data_engineering/web_scraping
+         data_modeling
 
 omit = tests/*
        venv/*

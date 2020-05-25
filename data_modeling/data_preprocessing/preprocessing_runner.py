@@ -1,7 +1,10 @@
 import os
 
 import pandas as pd
-from data_preprocessing.sentiment import add_col_polarity, add_col_subjectivity
+from data_modeling.data_preprocessing.sentiment import (
+    add_col_polarity,
+    add_col_subjectivity,
+)
 from utils.constants import (
     COL_TITLE,
     COL_ARTICLE,

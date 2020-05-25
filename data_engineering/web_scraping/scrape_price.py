@@ -5,9 +5,9 @@ import logging.config
 
 from utils.constants import LOG_CONFIG_PATH, WEB_SCRAPING_DATA_PATH
 from utils.helper import get_df_info_to_logger
-from web_scraping.scrape_news import export_df
-from web_scraping.clean_price import drop_null_rows
-from web_scraping.web_url import price_url
+from data_engineering.web_scraping.scrape_news import export_df
+from data_engineering.web_scraping.clean_price import drop_null_rows
+from data_engineering.web_scraping.web_url import price_url
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)

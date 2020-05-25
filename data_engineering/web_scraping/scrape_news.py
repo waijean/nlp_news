@@ -14,7 +14,7 @@ from utils.constants import (
     COL_DATE,
     WEB_SCRAPING_DATA_PATH,
 )
-from web_scraping.web_url import news_urls
+from data_engineering.web_scraping.web_url import news_urls
 
 
 def build_dataset(seed_urls: List) -> List:

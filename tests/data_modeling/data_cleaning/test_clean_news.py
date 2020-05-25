@@ -1,6 +1,4 @@
-import nltk
-
-from data_cleaning.clean_news import (
+from data_modeling.data_cleaning.clean_news import (
     remove_punctuation,
     remove_stopwords,
     tokenize,

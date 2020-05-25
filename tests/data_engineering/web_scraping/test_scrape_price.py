@@ -1,5 +1,8 @@
-from web_scraping.scrape_price import get_df_from_url_manual, get_df_from_url
-from web_scraping.web_url import price_url
+from data_engineering.web_scraping.scrape_price import (
+    get_df_from_url_manual,
+    get_df_from_url,
+)
+from data_engineering.web_scraping.web_url import price_url
 
 
 def test_get_df_from_url_manual():
