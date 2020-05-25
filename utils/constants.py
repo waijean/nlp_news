@@ -43,3 +43,6 @@ PARQUET_PARTITION_V2_PATH = os.path.join(
     ROOT_DIR_PATH, "data_pipeline/data/partition_v2.parquet"
 )
 DATA_PREPROCESSING_PATH = os.path.join(ROOT_DIR_PATH, "data_preprocessing/data")
+SQL_DATABASE_PATH = "D:/sqlite/db"
+TEST_SQL_DATABASE_PATH = os.path.join(SQL_DATABASE_PATH, "test.db")
+ARTIFACT_PATH = "D:/mlflow"
