@@ -24,3 +24,6 @@ notebooks/.ipynb_checkpoints/
 notebooks/dask-worker-space/
 data_pipeline/dask-worker-space/
 
+#artifacts
+mlruns/
+
