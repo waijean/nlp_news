@@ -16,6 +16,7 @@ from utils.constants import (
     DATA_PREPROCESSING_PATH,
     PARQUET_PARTITION_V2_PATH,
     LOG_CONFIG_PATH,
+    NEWS_FEATURE_PATH,
 )
 import logging.config
 
@@ -69,11 +70,9 @@ class PreprocessingPipelineNews(Pipeline):
 
     @classmethod
     def load(cls):
-        cls._write_path = DATA_PREPROCESSING_PATH
+        cls._write_path = NEWS_FEATURE_PATH
         super().load()
-        cls._processed_df.to_parquet(
-            os.path.join(cls._write_path, "news_feature.parquet")
-        )
+        cls._merged_df.to_parquet(cls._write_path)
 
     @classmethod
     def main(cls):

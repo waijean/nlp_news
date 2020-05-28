@@ -65,8 +65,15 @@ RAW_PRICE_PATH = os.path.join(
 )
 PROCESSED_PRICE_PATH = os.path.join(DATA_PIPELINE_PRICE_PATH, "processed_price.parquet")
 
+# data cleaning df
+DATA_CLEANING_PATH = os.path.join(ROOT_DIR_PATH, "data_cleaning/data")
 
+
+# data preprocessing df
 DATA_PREPROCESSING_PATH = os.path.join(ROOT_DIR_PATH, "data_preprocessing/data")
+NEWS_FEATURE_PATH = os.path.join(DATA_PREPROCESSING_PATH, "news_feature.parquet")
+
+# data cleaning df
 SQL_DATABASE_PATH = "D:/sqlite/db"
 TEST_SQL_DATABASE_PATH = os.path.join(SQL_DATABASE_PATH, "test.db")
 ARTIFACT_PATH = os.path.join(ROOT_DIR_PATH, "mlruns")
