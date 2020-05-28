@@ -1,9 +1,13 @@
 from typing import Iterable, List
 
-import spacy
+# TODO import spacy or language model
 import en_core_web_sm
+import logging.config
 
-nlp = en_core_web_sm.load()
+from utils.constants import LOG_CONFIG_PATH
+
+logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 
 def spacy_tokenizer(col: Iterable) -> List:
@@ -22,6 +26,10 @@ def spacy_tokenizer(col: Iterable) -> List:
     Returns: A list of tokenized strings which are joined with whitespaces
 
     """
+    logger.info("Loading en_core_web_sm model")
+    nlp = en_core_web_sm.load()
+
+    logger.info("Tokenizing texts")
     tokens_col = []
     for doc in nlp.pipe(col, disable=["tagger", "parser", "ner"]):
         tokens_list = [
