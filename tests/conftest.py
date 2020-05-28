@@ -392,6 +392,13 @@ def tokenized_list_lemmatize():
 
 
 @pytest.fixture(scope="session")
+def expected_spacy_tokenized_col():
+    return [
+        "mr shapps say announcement change strategy include imposition quarantine arrangement people arrive britain boris johnson televise address sunday night say situation ask stay home come country note numb people come uk currently small"
+    ]
+
+
+@pytest.fixture(scope="session")
 def article_col():
     return pd.Series(
         [
