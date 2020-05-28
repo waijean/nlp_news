@@ -3,7 +3,7 @@ from typing import List, Tuple
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
 from data_modeling.data_cleaning.nltk_tokenizer import nltk_tokenize
-from data_modeling.data_cleaning.normalize import lemmatize
+from data_modeling.data_cleaning.nltk_normalize import lemmatize
 
 from scipy.sparse import csr_matrix
 import pandas as pd
