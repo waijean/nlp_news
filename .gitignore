@@ -16,6 +16,7 @@ logs/
 data_engineering/data_pipeline/news/data/
 data_engineering/data_pipeline/price/data/
 data_modeling/data_preprocessing/data/
+data_modeling/data_cleaning/data/
 data_pipeline/data
 
 #notebooks
