@@ -17,11 +17,11 @@ COL_ARTICLE = "article"
 COL_CATEGORY = "category"
 COL_DATE = "date"
 
-# news df
+# news df columns
 COL_SECTION = "section"
 COL_TITLE = "title"
 
-# training df
+# training df columns
 COL_TITLE_POLARITY = "title_polarity"
 COL_TITLE_SUBJECTIVITY = "title_subjectivity"
 COL_ARTICLE_POLARITY = "article_polarity"
@@ -34,14 +34,38 @@ LOG_CONFIG_PATH = os.path.join(ROOT_DIR_PATH, "utils/logging.conf")
 WEB_SCRAPING_DATA_PATH = os.path.join(
     ROOT_DIR_PATH, "data_engineering/web_scraping/data"
 )
-DATA_PIPELINE_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data")
-CSV_PARTITION_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data/partition_csv")
+
+
+# news df path
+DATA_PIPELINE_NEWS_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_engineering/data_pipeline/news/data"
+)
+RAW_NEWS_PATH = os.path.join(DATA_PIPELINE_NEWS_PATH, "all-the-news-2-1.csv")
+PROCESSED_NEWS_PATH = os.path.join(
+    DATA_PIPELINE_NEWS_PATH, "processed-all-the-news-2-1.csv"
+)
+NEWS_PARTITION_CSV_PATH = os.path.join(DATA_PIPELINE_NEWS_PATH, "partition_csv")
 PARQUET_PARTITION_V1_PATH = os.path.join(
-    ROOT_DIR_PATH, "data_pipeline/data/partition_v1.parquet"
+    DATA_PIPELINE_NEWS_PATH, "partition_v1.parquet"
 )
 PARQUET_PARTITION_V2_PATH = os.path.join(
-    ROOT_DIR_PATH, "data_pipeline/data/partition_v2.parquet"
+    DATA_PIPELINE_NEWS_PATH, "partition_v2.parquet"
 )
+
+# archive df path
+ARCHIVE_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data")
+
+
+# price df path
+DATA_PIPELINE_PRICE_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_engineering/data_pipeline/price/data"
+)
+RAW_PRICE_PATH = os.path.join(
+    DATA_PIPELINE_PRICE_PATH, "VEVE_HistoricPrices_20141001-20200505.csv"
+)
+PROCESSED_PRICE_PATH = os.path.join(DATA_PIPELINE_PRICE_PATH, "processed_price.parquet")
+
+
 DATA_PREPROCESSING_PATH = os.path.join(ROOT_DIR_PATH, "data_preprocessing/data")
 SQL_DATABASE_PATH = "D:/sqlite/db"
 TEST_SQL_DATABASE_PATH = os.path.join(SQL_DATABASE_PATH, "test.db")

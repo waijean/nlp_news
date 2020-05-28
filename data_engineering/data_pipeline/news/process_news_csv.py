@@ -8,7 +8,7 @@ import pandas as pd
 
 from utils.pipeline_abc import Pipeline
 from utils.constants import (
-    CSV_PARTITION_PATH,
+    NEWS_PARTITION_CSV_PATH,
     PARQUET_PARTITION_V2_PATH,
     LOG_CONFIG_PATH,
     COL_SECTION,
@@ -91,7 +91,7 @@ class DataPipelineNews(Pipeline):
 
     @classmethod
     def main(cls):
-        for i, file in enumerate(glob.glob(f"{CSV_PARTITION_PATH}/news_csv*")):
+        for i, file in enumerate(glob.glob(f"{NEWS_PARTITION_CSV_PATH}/news_csv*")):
             cls._i = i
             cls._read_path = file
             super().main()
