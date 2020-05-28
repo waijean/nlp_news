@@ -66,11 +66,13 @@ RAW_PRICE_PATH = os.path.join(
 PROCESSED_PRICE_PATH = os.path.join(DATA_PIPELINE_PRICE_PATH, "processed_price.parquet")
 
 # data cleaning df
-DATA_CLEANING_PATH = os.path.join(ROOT_DIR_PATH, "data_cleaning/data")
-
+DATA_CLEANING_PATH = os.path.join(ROOT_DIR_PATH, "data_modeling/data_cleaning/data")
+CLEANED_NEWS_TITLE_PATH = os.path.join(DATA_CLEANING_PATH, "cleaned_news_title.parquet")
 
 # data preprocessing df
-DATA_PREPROCESSING_PATH = os.path.join(ROOT_DIR_PATH, "data_preprocessing/data")
+DATA_PREPROCESSING_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_modeling/data_preprocessing/data"
+)
 NEWS_FEATURE_PATH = os.path.join(DATA_PREPROCESSING_PATH, "news_feature.parquet")
 
 # data cleaning df
