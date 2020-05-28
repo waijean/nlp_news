@@ -57,7 +57,7 @@ def remove_stopwords(tokenized_list: List) -> List:
     return tokenized_list_no_stopwords
 
 
-def full_tokenize(text: str) -> List:
+def nltk_tokenize(text: str) -> List:
     tokens = tokenize(text)
     tokens_no_punc = remove_token_punctuation(tokens)
     tokens_no_stopwords = remove_stopwords(tokens_no_punc)

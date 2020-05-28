@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
-from data_modeling.data_cleaning.clean_news import full_tokenize
+from data_modeling.data_cleaning.nltk_tokenizer import nltk_tokenize
 from data_modeling.data_cleaning.normalize import lemmatize
 
 from scipy.sparse import csr_matrix
@@ -27,7 +27,7 @@ class CustomVectorizer(CountVectorizer):
             2. Lemmatize
             3. Extract n-grams
             """
-            tokens = full_tokenize(text)
+            tokens = nltk_tokenize(text)
             lemmatized_tokens = lemmatize(tokens)
 
             return self._word_ngrams(lemmatized_tokens)
