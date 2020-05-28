@@ -9,6 +9,7 @@ dask[distributed]
 nltk==3.5
 textblob==0.15.3
 scikit-learn==0.22.2.post1
+spacy==2.2.4
 
 #utils
 pre-commit==2.3.0
