@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from data_modeling.data_preprocessing.sentiment import (
+from data_modeling.data_preprocessing.textblob_sentiment import (
     add_col_polarity,
     add_col_subjectivity,
 )

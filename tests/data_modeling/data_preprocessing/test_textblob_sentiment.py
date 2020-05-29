@@ -1,4 +1,4 @@
-from data_modeling.data_preprocessing.sentiment import (
+from data_modeling.data_preprocessing.textblob_sentiment import (
     calculate_polarity,
     calculate_subjectivity,
     add_col_polarity,
