@@ -72,7 +72,7 @@ class PreprocessingPipelineNews(Pipeline):
     def load(cls):
         cls._write_path = NEWS_FEATURE_PATH
         super().load()
-        cls._merged_df.to_parquet(cls._write_path)
+        cls._processed_df.to_parquet(cls._write_path)
 
     @classmethod
     def main(cls):
