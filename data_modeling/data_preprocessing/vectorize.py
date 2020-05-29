@@ -9,7 +9,7 @@ from scipy.sparse import csr_matrix
 import pandas as pd
 
 
-class CustomVectorizer(CountVectorizer):
+class NLTKVectorizer(CountVectorizer):
     """
     Defines a CustomVectorizer class which inherits from CountVectorizer in order to overwrite its build_analyzer
     method and use its _word_ngrams built in method to extract n-grams
@@ -37,11 +37,11 @@ class CustomVectorizer(CountVectorizer):
 
 def count_vectorize(
     text_col: pd.Series, ngram_range: tuple
-) -> Tuple[CustomVectorizer, csr_matrix]:
+) -> Tuple[NLTKVectorizer, csr_matrix]:
     """
     Instantiate the Custom Vectorizer, fit_transform on the text column and return sparse matrix
     """
-    count_vect = CustomVectorizer(ngram_range=ngram_range)
+    count_vect = NLTKVectorizer(ngram_range=ngram_range)
     X_count = count_vect.fit_transform(text_col)
     return count_vect, X_count
 
@@ -53,3 +53,25 @@ def transform_tfidf(X_count: csr_matrix) -> csr_matrix:
     tfidf = TfidfTransformer()
     X_tfidf = tfidf.fit_transform(X_count)
     return X_tfidf
+
+
+class SpacyVectorizer(CountVectorizer):
+    """
+    The documents are pre-tokenized by spaCy, so store them in strings with the tokens separated by whitespace and pass
+    analyzer=str.split
+    """
+
+    def build_analyzer(self):
+        def analyser(text: str) -> List:
+            """
+            Create the analyzer that will be returned by build_analyzer method
+
+            This analyser is split into three stages
+            1. Split pre-tokenized strings by whitespace
+            2. Extract n-grams
+            """
+            tokens = text.split()
+
+            return self._word_ngrams(tokens)
+
+        return analyser
