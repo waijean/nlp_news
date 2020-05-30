@@ -7,7 +7,7 @@ logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
 
-class Pipeline(ABC):
+class ETLPipeline(ABC):
     _write_path = None
     _read_path = None
 
@@ -32,3 +32,29 @@ class Pipeline(ABC):
         cls.extract()
         cls.transform()
         cls.load()
+
+
+class CrossValidatePipeline(ABC):
+    _read_path = None
+
+    @classmethod
+    @abstractmethod
+    def load_data(cls):
+        logger.info(f"Loading data from {cls._read_path}")
+
+    @classmethod
+    @abstractmethod
+    def construct_pipeline(cls):
+        logger.info("Constructing pipeline")
+
+    @classmethod
+    @abstractmethod
+    def evaluate_pipeline(cls):
+        logger.info(f"Evaluating pipeline")
+
+    @classmethod
+    @abstractmethod
+    def main(cls):
+        cls.load_data()
+        cls.construct_pipeline()
+        cls.evaluate_pipeline()

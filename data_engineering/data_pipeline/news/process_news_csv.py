@@ -6,7 +6,7 @@ import logging.config
 
 import pandas as pd
 
-from utils.pipeline_abc import Pipeline
+from utils.pipeline_abc import ETLPipeline
 from utils.constants import (
     NEWS_PARTITION_CSV_PATH,
     PARQUET_PARTITION_V2_PATH,
@@ -46,7 +46,7 @@ def select_relevant_section(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-class DataPipelineNews(Pipeline):
+class DataPipelineNews(ETLPipeline):
 
     _df: pd.DataFrame
     _processed_df: pd.DataFrame

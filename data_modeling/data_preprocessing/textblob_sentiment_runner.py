@@ -20,7 +20,7 @@ from utils.constants import (
 )
 import logging.config
 
-from utils.pipeline_abc import Pipeline
+from utils.pipeline_abc import ETLPipeline
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ def calculate_average_value_per_day(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-class PreprocessingPipelineNews(Pipeline):
+class PreprocessingPipelineNews(ETLPipeline):
 
     _df: pd.DataFrame
     _processed_df: pd.DataFrame

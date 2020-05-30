@@ -7,11 +7,11 @@ from utils.constants import (
     COL_SIGN,
     CLEANED_NEWS_TITLE_PATH,
 )
-from utils.pipeline_abc import Pipeline
+from utils.pipeline_abc import ETLPipeline
 import pandas as pd
 
 
-class CleaningPipelineNews(Pipeline):
+class CleaningPipelineNews(ETLPipeline):
 
     _news_df: pd.DataFrame
     _price_df: pd.DataFrame
