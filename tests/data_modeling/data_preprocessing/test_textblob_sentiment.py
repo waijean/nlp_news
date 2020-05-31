@@ -1,3 +1,5 @@
+from pandas._testing import assert_series_equal
+
 from data_modeling.data_preprocessing.textblob_sentiment import (
     calculate_polarity,
     calculate_subjectivity,
@@ -23,10 +25,14 @@ def test_calculate_subjectivity(input_text):
 def test_add_col_polarity(input_text_df):
     actual_df = add_col_polarity(input_text_df, COL_ARTICLE)
     expected_col = pd.Series([-0.325], name=COL_ARTICLE_POLARITY)
-    assert all(np.isclose(actual_df[COL_ARTICLE_POLARITY], expected_col))
+    assert_series_equal(
+        actual_df[COL_ARTICLE_POLARITY], expected_col, check_less_precise=True
+    )
 
 
 def test_add_col_subjectivity(input_text_df):
     actual_df = add_col_subjectivity(input_text_df, COL_ARTICLE)
     expected_col = pd.Series([0.52], name=COL_ARTICLE_SUBJECTIVITY)
-    assert all(np.isclose(actual_df[COL_ARTICLE_SUBJECTIVITY], expected_col))
+    assert_series_equal(
+        actual_df[COL_ARTICLE_SUBJECTIVITY], expected_col, check_less_precise=True
+    )

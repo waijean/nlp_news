@@ -1,8 +1,0 @@
-[
-  "test_vectorize.py::test_count_vectorize",
-  "test_vectorize.py::test_transform_tfidf",
-  "test_sentiment.py::test_calculate_polarity",
-  "test_sentiment.py::test_calculate_subjectivity",
-  "test_sentiment.py::test_add_col_polarity",
-  "test_sentiment.py::test_add_col_subjectivity"
-]
