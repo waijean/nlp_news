@@ -81,7 +81,7 @@ def test_log_params(setup_mlflow_run, cross_validate_pipeline):
 def test_log_pipeline(setup_mlflow_run, cross_validate_pipeline):
     """
     Two ways of testing:
-    1. Use the list artifacts method from MlflowClient and assert the FileInfo object (pipeline html) exists in that list
+    1. Use the list artifacts method from MlflowClient and assert file path exists in that list
     2. Read the html file from artifact uri and assert the html file with the expected html file
 
     Note that the artifact uri is different from the artifact location we passed to CrossValidatePipeline
@@ -96,8 +96,7 @@ def test_log_pipeline(setup_mlflow_run, cross_validate_pipeline):
     cross_validate_pipeline.log_pipeline()
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
-    expected_file = FileInfo(path=PIPELINE_HTML, is_dir=False, file_size=3940)
-    assert expected_file in artifacts
+    assert artifacts[0].path == PIPELINE_HTML
 
 
 def test_evaluate_pipeline_and_log_explainability(
@@ -110,7 +109,7 @@ def test_evaluate_pipeline_and_log_explainability(
 
     1. Assert the fitted estimator is a DecisionTreeClassifier
     2. Check the metrics property in RunData (excluding certain keys such as "estimator", "fit_time" and "score_time")
-    3. Assert artifact name is scores csv (can't create FileInfo object because the file size changes due to changes in fit/score time)
+    3. Assert file path exists in artifacts list
     #TODO read dataframe and assert df
     """
     cross_validate_pipeline.load_data()
