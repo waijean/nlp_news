@@ -132,9 +132,6 @@ def test_evaluate_pipeline_and_log_explainability(
 
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
-    assert artifacts[2].path == SCORES_CSV
+    assert artifacts[1].path == SCORES_CSV
 
-    expected_file = FileInfo(
-        path=FEATURE_IMPORTANCE_PLOT, is_dir=False, file_size=3334413
-    )
-    assert expected_file in artifacts
+    assert artifacts[0].path == FEATURE_IMPORTANCE_PLOT
