@@ -1,7 +1,17 @@
+from functools import lru_cache
+
+import mlflow
 import pytest
 import pandas as pd
 import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.metrics import f1_score, make_scorer, recall_score, precision_score
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 
+from data_modeling.cross_validate_runner import CrossValidatePipeline
 from utils.constants import (
     COL_HEADLINE,
     COL_ARTICLE,
@@ -11,6 +21,15 @@ from utils.constants import (
     COL_VOLUME,
     COL_OPEN,
     COL_PRICE_DATE,
+    CLASSIFIER,
+    iris_X_COL,
+    iris_y_COL,
+    FULL_PARAM,
+    SCALER_PARAM,
+    CLF_PARAM,
+    CLASSIFIER_SCORING,
+    MICRO_CLASSIFIER_SCORING,
+    TEST_EXPERIMENT_NAME,
 )
 
 
@@ -26,9 +45,70 @@ def expected_news_df():
 
 
 @pytest.fixture(scope="session")
-def working_dir(tmpdir_factory):
-    fn = tmpdir_factory.mktemp("working_dir")
-    return fn
+def working_dir(tmp_path_factory):
+    # Default base temporary directory is C:\Users\kwj_9\AppData\Local\Temp\pytest-of-kwj_9
+    tmp_path = tmp_path_factory.mktemp("working_dir")
+    return tmp_path
+
+
+@pytest.fixture(scope="session")
+def iris_df():
+    iris = load_iris()
+    return pd.DataFrame(
+        data=np.c_[iris["data"], iris["target"]],
+        columns=iris["feature_names"] + ["target"],
+    )
+
+
+@pytest.fixture(scope="session")
+def expected_X_train(iris_df):
+    # TODO return tuple for fixture
+    X = iris_df[
+        [
+            "sepal length (cm)",
+            "sepal width (cm)",
+            "petal length (cm)",
+            "petal width (cm)",
+        ]
+    ]
+    y = iris_df["target"]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.33, random_state=42
+    )
+    return X_train
+
+
+@pytest.fixture(scope="session")
+def expected_y_train(iris_df):
+    X = iris_df[
+        [
+            "sepal length (cm)",
+            "sepal width (cm)",
+            "petal length (cm)",
+            "petal width (cm)",
+        ]
+    ]
+    y = iris_df["target"]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.33, random_state=42
+    )
+    return y_train
+
+
+@pytest.fixture(scope="session")
+def data_dir(tmp_path_factory, iris_df):
+    # Default base temporary directory is C:\Users\kwj_9\AppData\Local\Temp\pytest-of-kwj_9
+    tmp_path = tmp_path_factory.mktemp("data")
+    p = tmp_path / "iris.parquet"
+    iris_df.to_parquet(p)
+    return tmp_path
+
+
+@pytest.fixture(scope="session")
+def mlrun_dir(tmp_path_factory):
+    # Default base temporary directory is C:\Users\kwj_9\AppData\Local\Temp\pytest-of-kwj_9
+    tmp_path = tmp_path_factory.mktemp("mlruns")
+    return tmp_path
 
 
 @pytest.fixture(scope="session")
@@ -434,3 +514,54 @@ def X_tfidf_df():
             dtype=np.float64,
         )
     )
+
+
+@pytest.fixture(scope="session")
+def pipeline():
+    scaler = StandardScaler(**SCALER_PARAM)
+    clf = DecisionTreeClassifier(**CLF_PARAM)
+    return Pipeline([("scaler", scaler), (CLASSIFIER, clf)])
+
+
+@pytest.fixture(scope="session")
+def cross_validate_pipeline(data_dir, mlrun_dir, pipeline):
+    test_mlrun_dir = "file:" + str(mlrun_dir)
+    read_path = data_dir / "iris.parquet"
+
+    return CrossValidatePipeline(
+        experiment_name=TEST_EXPERIMENT_NAME,
+        read_path=read_path,
+        X_col=iris_X_COL,
+        y_col=iris_y_COL,
+        params=FULL_PARAM,
+        pipeline=pipeline,
+        scoring=MICRO_CLASSIFIER_SCORING,
+        tracking_uri=test_mlrun_dir,
+        artifact_location=test_mlrun_dir,
+    )
+
+
+@pytest.fixture(scope="session")
+def cv_result(pipeline, expected_X_train, expected_y_train):
+    cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
+    return cross_validate(
+        pipeline,
+        expected_X_train,
+        expected_y_train,
+        scoring=MICRO_CLASSIFIER_SCORING,
+        cv=cross_validation,
+        n_jobs=-1,
+        return_train_score=True,
+        return_estimator=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def setup_mlflow_experiment_id(cross_validate_pipeline):
+    return cross_validate_pipeline.setup_mlflow()
+
+
+@pytest.fixture(scope="session")
+def setup_mlflow_run(setup_mlflow_experiment_id):
+    with mlflow.start_run(experiment_id=setup_mlflow_experiment_id) as active_run:
+        yield active_run
