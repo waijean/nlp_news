@@ -96,7 +96,8 @@ def test_log_pipeline(setup_mlflow_run, cross_validate_pipeline):
     cross_validate_pipeline.log_pipeline()
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
-    assert artifacts[0].path == PIPELINE_HTML
+    artifacts_paths = [artifact.path for artifact in artifacts]
+    assert PIPELINE_HTML in artifacts_paths
 
 
 def test_evaluate_pipeline_and_log_explainability(
@@ -132,6 +133,7 @@ def test_evaluate_pipeline_and_log_explainability(
 
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
-    assert artifacts[1].path == SCORES_CSV
+    artifacts_paths = [artifact.path for artifact in artifacts]
+    assert SCORES_CSV in artifacts_paths
 
-    assert artifacts[0].path == FEATURE_IMPORTANCE_PLOT
+    assert FEATURE_IMPORTANCE_PLOT in artifacts_paths
