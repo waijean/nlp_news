@@ -30,6 +30,7 @@ jobs:
         pip install -r requirements.txt
         python -m nltk.downloader -d /usr/share/nltk_data all
         python -m textblob.download_corpora
+        python -m spacy download en_core_web_sm
     - name: Test with pytest
       run: |
         pytest tests/

@@ -2,12 +2,13 @@ import logging.config
 import os
 
 from utils.constants import (
-    DATA_PIPELINE_PATH,
     LOG_CONFIG_PATH,
     COL_DATE,
     COL_TITLE,
     COL_ARTICLE,
     COL_SECTION,
+    ARCHIVE_PATH,
+    PROCESSED_NEWS_PATH,
 )
 
 import dask.dataframe as dd
@@ -79,12 +80,10 @@ def process_date(df):
 
 if __name__ == "__main__":
     set_up_client()
-    df = read_csv_dask(
-        os.path.join(DATA_PIPELINE_PATH, "processed-all-the-news-2-1.csv")
-    )
+    df = read_csv_dask(PROCESSED_NEWS_PATH)
     processed_df = df.pipe(drop_rows_with_null_section_dask).pipe(process_date)
     processed_df.to_parquet(
-        os.path.join(DATA_PIPELINE_PATH, "news_v1.parquet"),
+        os.path.join(ARCHIVE_PATH, "news_v1.parquet"),
         engine="pyarrow",
         write_index=False,
     )

@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from data_modeling.data_preprocessing.sentiment import (
+from data_modeling.data_preprocessing.textblob_sentiment import (
     add_col_polarity,
     add_col_subjectivity,
 )
@@ -16,10 +16,11 @@ from utils.constants import (
     DATA_PREPROCESSING_PATH,
     PARQUET_PARTITION_V2_PATH,
     LOG_CONFIG_PATH,
+    NEWS_FEATURE_PATH,
 )
 import logging.config
 
-from utils.pipeline_abc import Pipeline
+from utils.pipeline_abc import ETLPipeline
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def calculate_average_value_per_day(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-class PreprocessingPipelineNews(Pipeline):
+class PreprocessingPipelineNews(ETLPipeline):
 
     _df: pd.DataFrame
     _processed_df: pd.DataFrame
@@ -69,11 +70,9 @@ class PreprocessingPipelineNews(Pipeline):
 
     @classmethod
     def load(cls):
-        cls._write_path = DATA_PREPROCESSING_PATH
+        cls._write_path = NEWS_FEATURE_PATH
         super().load()
-        cls._processed_df.to_parquet(
-            os.path.join(cls._write_path, "news_feature.parquet")
-        )
+        cls._processed_df.to_parquet(cls._write_path)
 
     @classmethod
     def main(cls):

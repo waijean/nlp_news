@@ -6,9 +6,9 @@ import logging.config
 
 import pandas as pd
 
-from utils.pipeline_abc import Pipeline
+from utils.pipeline_abc import ETLPipeline
 from utils.constants import (
-    CSV_PARTITION_PATH,
+    NEWS_PARTITION_CSV_PATH,
     PARQUET_PARTITION_V2_PATH,
     LOG_CONFIG_PATH,
     COL_SECTION,
@@ -46,7 +46,7 @@ def select_relevant_section(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-class DataPipelineNews(Pipeline):
+class DataPipelineNews(ETLPipeline):
 
     _df: pd.DataFrame
     _processed_df: pd.DataFrame
@@ -91,7 +91,7 @@ class DataPipelineNews(Pipeline):
 
     @classmethod
     def main(cls):
-        for i, file in enumerate(glob.glob(f"{CSV_PARTITION_PATH}/news_csv*")):
+        for i, file in enumerate(glob.glob(f"{NEWS_PARTITION_CSV_PATH}/news_csv*")):
             cls._i = i
             cls._read_path = file
             super().main()

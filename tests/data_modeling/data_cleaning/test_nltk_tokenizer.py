@@ -1,8 +1,8 @@
-from data_modeling.data_cleaning.clean_news import (
+from data_modeling.data_cleaning.nltk_tokenizer import (
     remove_punctuation,
     remove_stopwords,
     tokenize,
-    full_tokenize,
+    nltk_tokenize,
     remove_token_punctuation,
 )
 
@@ -28,5 +28,5 @@ def test_remove_stopwords(tokenized_list_no_punc, tokenized_list_no_stopwords):
 
 
 def test_full_tokenize(input_text, tokenized_list_no_stopwords):
-    actual_tokenized_list_no_stopwords = full_tokenize(input_text)
+    actual_tokenized_list_no_stopwords = nltk_tokenize(input_text)
     assert actual_tokenized_list_no_stopwords == tokenized_list_no_stopwords

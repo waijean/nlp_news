@@ -1,11 +1,9 @@
 import logging.config
-import os
 from datetime import datetime
 import pandas as pd
 
 from utils.constants import (
     LOG_CONFIG_PATH,
-    DATA_PIPELINE_PATH,
     COL_OPEN,
     COL_PRICE_DATE,
     COL_PREVIOUS_CLOSE,
@@ -13,6 +11,8 @@ from utils.constants import (
     COL_ABSOLUTE_RETURN,
     COL_VOLUME,
     COL_SIGN,
+    RAW_PRICE_PATH,
+    PROCESSED_PRICE_PATH,
 )
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
@@ -88,9 +88,9 @@ def select_cols(df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    logger.info(f"Reading from {DATA_PIPELINE_PATH}")
+    logger.info(f"Reading from {RAW_PRICE_PATH}")
     df = pd.read_csv(
-        os.path.join(DATA_PIPELINE_PATH, "VEVE_HistoricPrices_20141001-20200505.csv"),
+        RAW_PRICE_PATH,
         usecols=[COL_PRICE_DATE, COL_OPEN, COL_CLOSE, COL_VOLUME],
         thousands=",",
         parse_dates=[COL_PRICE_DATE],
@@ -104,5 +104,5 @@ if __name__ == "__main__":
         .pipe(add_col_sign)
         .pipe(select_cols)
     )
-    logger.info(f"Writing to {DATA_PIPELINE_PATH}")
-    processed_df.to_parquet(os.path.join(DATA_PIPELINE_PATH, "processed_price.parquet"))
+    logger.info(f"Writing to {PROCESSED_PRICE_PATH}")
+    processed_df.to_parquet(PROCESSED_PRICE_PATH)

@@ -1,8 +1,11 @@
 import os
+from typing import Any, Dict
 
 import git
 
 # price_df
+from sklearn.metrics import recall_score, f1_score, make_scorer, precision_score
+
 COL_PRICE_DATE = "Date"
 COL_OPEN = "Open"
 COL_CLOSE = "Close"
@@ -17,11 +20,11 @@ COL_ARTICLE = "article"
 COL_CATEGORY = "category"
 COL_DATE = "date"
 
-# news df
+# news df columns
 COL_SECTION = "section"
 COL_TITLE = "title"
 
-# training df
+# training df columns
 COL_TITLE_POLARITY = "title_polarity"
 COL_TITLE_SUBJECTIVITY = "title_subjectivity"
 COL_ARTICLE_POLARITY = "article_polarity"
@@ -34,15 +37,99 @@ LOG_CONFIG_PATH = os.path.join(ROOT_DIR_PATH, "utils/logging.conf")
 WEB_SCRAPING_DATA_PATH = os.path.join(
     ROOT_DIR_PATH, "data_engineering/web_scraping/data"
 )
-DATA_PIPELINE_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data")
-CSV_PARTITION_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data/partition_csv")
+
+
+# news df path
+DATA_PIPELINE_NEWS_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_engineering/data_pipeline/news/data"
+)
+RAW_NEWS_PATH = os.path.join(DATA_PIPELINE_NEWS_PATH, "all-the-news-2-1.csv")
+PROCESSED_NEWS_PATH = os.path.join(
+    DATA_PIPELINE_NEWS_PATH, "processed-all-the-news-2-1.csv"
+)
+NEWS_PARTITION_CSV_PATH = os.path.join(DATA_PIPELINE_NEWS_PATH, "partition_csv")
 PARQUET_PARTITION_V1_PATH = os.path.join(
-    ROOT_DIR_PATH, "data_pipeline/data/partition_v1.parquet"
+    DATA_PIPELINE_NEWS_PATH, "partition_v1.parquet"
 )
 PARQUET_PARTITION_V2_PATH = os.path.join(
-    ROOT_DIR_PATH, "data_pipeline/data/partition_v2.parquet"
+    DATA_PIPELINE_NEWS_PATH, "partition_v2.parquet"
 )
-DATA_PREPROCESSING_PATH = os.path.join(ROOT_DIR_PATH, "data_preprocessing/data")
-SQL_DATABASE_PATH = "D:/sqlite/db"
-TEST_SQL_DATABASE_PATH = os.path.join(SQL_DATABASE_PATH, "test.db")
-ARTIFACT_PATH = "D:/mlflow"
+
+# archive df path
+ARCHIVE_PATH = os.path.join(ROOT_DIR_PATH, "data_pipeline/data")
+
+
+# price df path
+DATA_PIPELINE_PRICE_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_engineering/data_pipeline/price/data"
+)
+RAW_PRICE_PATH = os.path.join(
+    DATA_PIPELINE_PRICE_PATH, "VEVE_HistoricPrices_20141001-20200505.csv"
+)
+PROCESSED_PRICE_PATH = os.path.join(DATA_PIPELINE_PRICE_PATH, "processed_price.parquet")
+
+# data cleaning df
+DATA_CLEANING_PATH = os.path.join(ROOT_DIR_PATH, "data_modeling/data_cleaning/data")
+CLEANED_NEWS_TITLE_PATH = os.path.join(DATA_CLEANING_PATH, "cleaned_news_title.parquet")
+
+# data preprocessing df
+DATA_PREPROCESSING_PATH = os.path.join(
+    ROOT_DIR_PATH, "data_modeling/data_preprocessing/data"
+)
+NEWS_FEATURE_PATH = os.path.join(DATA_PREPROCESSING_PATH, "news_feature.parquet")
+
+# mlrun path
+SQL_DATABASE_PATH = "/D:/sqlite/db"
+TEST_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "test.db")
+MLRUN_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "mlrun.db")
+TEST_ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns/test")
+ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns")
+TEST_EXPERIMENT_NAME = "Pytest DecisionTree"
+
+# mlrun tags
+X_COL = "X_col"
+Y_COL = "y_col"
+iris_X_COL = [
+    "sepal length (cm)",
+    "sepal width (cm)",
+    "petal length (cm)",
+    "petal width (cm)",
+]
+iris_y_COL = "target"
+
+# mlrun params
+SCALER_PARAM = {"with_mean": True}
+CLF_PARAM = {
+    "criterion": "gini",
+    "splitter": "random",
+    "max_depth": 20,
+    "random_state": 42,
+}
+FULL_PARAM: Dict[str, Any] = {**SCALER_PARAM, **CLF_PARAM}
+
+# mlrun artifacts
+PIPELINE_HTML = "pipeline.html"
+SCORES_CSV = "scores.csv"
+FEATURE_IMPORTANCE_PLOT = "feature_importance_plot"
+
+# mlrun metrics
+ACCURACY = "accuracy"
+PRECISION = "precision"
+RECALL = "recall"
+F1 = "f1"
+CLASSIFIER_SCORING = {
+    ACCURACY: ACCURACY,
+    PRECISION: make_scorer(precision_score, average="binary"),
+    RECALL: make_scorer(recall_score, average="binary"),
+    F1: make_scorer(f1_score, average="binary"),
+}
+MICRO_CLASSIFIER_SCORING = {
+    ACCURACY: ACCURACY,
+    PRECISION: make_scorer(precision_score, average="micro"),
+    RECALL: make_scorer(recall_score, average="micro"),
+    F1: make_scorer(f1_score, average="micro"),
+}
+
+# cross validate constants
+VECTORIZER = "vectorizer"
+CLASSIFIER = "classifier"
