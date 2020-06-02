@@ -53,7 +53,12 @@ def log_pipeline(pipeline: Pipeline):
     os.remove(PIPELINE_HTML)
 
 
-def log_metrics(cv_results: Dict[str, Any]):
+def log_metrics(metrics: Dict[str, Any]):
+    logger.info("Logging metrics")
+    mlflow.log_metrics(metrics)
+
+
+def log_cv_metrics(cv_results: Dict[str, Any]):
     # remove estimator from cv_results dictionary to log metric and dataframe
     cv_results_without_estimator = {
         key: array for key, array in cv_results.items() if key != "estimator"
@@ -70,11 +75,11 @@ def log_df_artifact(df: pd.DataFrame, filename: str):
     os.remove(filename)
 
 
-def log_explainability(fitted_classifier, X_train):
+def log_explainability(fitted_classifier, X_col):
     logger.info("Logging explainability")
     if hasattr(fitted_classifier, "feature_importances_"):
         feature_importance = pd.Series(
-            data=fitted_classifier.feature_importances_, index=X_train.columns,
+            data=fitted_classifier.feature_importances_, index=X_col,
         ).sort_values()
         feature_importance_fig = px.bar(
             feature_importance,

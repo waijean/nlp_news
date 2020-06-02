@@ -1,7 +1,12 @@
 from typing import List, Dict
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
+from sklearn.model_selection import (
+    train_test_split,
+    StratifiedKFold,
+    cross_validate,
+    GridSearchCV,
+)
 from sklearn.pipeline import Pipeline
 
 from utils.constants import CLASSIFIER
@@ -24,9 +29,9 @@ def evaluate_cv_pipeline(
     logger.info("Evaluating pipeline")
     cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     cv_results = cross_validate(
-        pipeline,
-        X_train,
-        y_train,
+        estimator=pipeline,
+        X=X_train,
+        y=y_train,
         scoring=scoring,
         cv=cross_validation,
         n_jobs=-1,
@@ -37,3 +42,30 @@ def evaluate_cv_pipeline(
     fitted_classifier = cv_results["estimator"][0][CLASSIFIER]
 
     return fitted_classifier, cv_results
+
+
+def evaluate_grid_search_pipeline(
+    pipeline: Pipeline,
+    param_grid,
+    X_train: pd.DataFrame,
+    y_train: pd.DataFrame,
+    scoring: Dict,
+):
+    cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
+    gs = GridSearchCV(
+        pipeline=pipeline,
+        param_grid=param_grid,
+        scoring=scoring,
+        cv=cross_validation,
+        refit="accuracy",
+        n_jobs=-1,
+        verbose=1,
+        return_train_score=True,
+    )
+    gs = gs.fit(X_train, y_train)
+    best = {
+        "params": gs.best_params_,
+        "metrics": gs.best_score_,
+        "fitted_classifier": gs.best_estimator_,
+    }
+    return best, gs.cv_results_

@@ -10,7 +10,7 @@ from data_modeling.mlrun import (
     set_tags,
     log_params,
     log_pipeline,
-    log_metrics,
+    log_cv_metrics,
     log_explainability,
     setup_mlflow,
 )
@@ -70,8 +70,8 @@ class CrossValidatePipeline:
             fitted_classifier, cv_results = evaluate_cv_pipeline(
                 self.pipeline, X_train, y_train, self.scoring
             )
-            log_metrics(cv_results)
-            log_explainability(fitted_classifier, X_train)
+            log_cv_metrics(cv_results)
+            log_explainability(fitted_classifier, self.X_col)
 
 
 if __name__ == "__main__":

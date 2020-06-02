@@ -6,7 +6,7 @@ from data_modeling.mlrun import (
     log_pipeline,
     log_explainability,
     log_df_artifact,
-    log_metrics,
+    log_cv_metrics,
 )
 from utils.constants import (
     X_COL,
@@ -60,7 +60,7 @@ def test_log_pipeline(setup_mlflow_run, test_pipeline):
 
 
 def test_log_explainability(setup_mlflow_run, test_fitted_classifier, expected_X_train):
-    log_explainability(test_fitted_classifier, expected_X_train)
+    log_explainability(test_fitted_classifier, iris_X_COL)
     client = mlflow.tracking.MlflowClient()
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
     artifacts_paths = [artifact.path for artifact in artifacts]
@@ -76,8 +76,8 @@ def test_log_df_artifact(setup_mlflow_run, expected_X_train):
     assert SCORES_CSV in artifacts_paths
 
 
-def test_log_metrics(setup_mlflow_run, expected_cv_result):
-    log_metrics(expected_cv_result)
+def test_log_cv_metrics(setup_mlflow_run, expected_cv_result):
+    log_cv_metrics(expected_cv_result)
     client = mlflow.tracking.MlflowClient()
     data = client.get_run(setup_mlflow_run.info.run_id).data
     expected_metrics = {

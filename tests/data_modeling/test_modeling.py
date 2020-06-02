@@ -39,13 +39,8 @@ def test_evaluate_cv_pipeline(
     expected_cv_result,
 ):
     """
-    Note:
-    - Need to load data before training model
-    - Combine evaluate pipeline and log explainability so don't have to train the pipeline twice
-
     1. Assert the fitted estimator is a DecisionTreeClassifier
     2. Check the metrics property in RunData (excluding certain keys such as "estimator", "fit_time" and "score_time")
-    3. Assert file path exists in artifacts list
     """
     fitted_classifier, cv_results = evaluate_cv_pipeline(
         test_pipeline, expected_X_train, expected_y_train, MICRO_CLASSIFIER_SCORING
