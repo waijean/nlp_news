@@ -45,7 +45,11 @@ def test_load_and_split_data(data_dir, expected_X_train, expected_y_train):
 
 
 def test_evaluate_cv_pipeline(
-    test_pipeline, expected_X_train, expected_y_train, expected_cv_result_metrics,
+    setup_mlflow_run,
+    test_pipeline,
+    expected_X_train,
+    expected_y_train,
+    expected_cv_result,
 ):
     """
     1. Assert the fitted estimator is a DecisionTreeClassifier
@@ -61,8 +65,13 @@ def test_evaluate_cv_pipeline(
 
     assert isinstance(fitted_classifier, DecisionTreeClassifier)
 
-    for key, value in expected_cv_result_metrics.items():
-        assert np.allclose(cv_results[key], value)
+    expected_metrics = {
+        key: array
+        for key, array in expected_cv_result.items()
+        if key not in ["estimator", "fit_time", "score_time"]
+    }
+    for key, value in expected_metrics.items():
+        assert all(cv_results[key] == value)
 
 
 def test_evaluate_grid_search_pipeline(
