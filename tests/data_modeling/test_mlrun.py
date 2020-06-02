@@ -76,14 +76,12 @@ def test_log_df_artifact(setup_mlflow_run, expected_X_train):
     assert SCORES_CSV in artifacts_paths
 
 
-def test_log_cv_metrics(setup_mlflow_run, expected_cv_result):
-    log_cv_metrics(expected_cv_result)
+def test_log_cv_metrics(setup_mlflow_run, expected_cv_result_metrics):
+    log_cv_metrics(expected_cv_result_metrics)
     client = mlflow.tracking.MlflowClient()
     data = client.get_run(setup_mlflow_run.info.run_id).data
-    expected_metrics = {
-        key: max(array)
-        for key, array in expected_cv_result.items()
-        if key not in ["estimator", "fit_time", "score_time"]
+    expected_max_metrics = {
+        key: max(array) for key, array in expected_cv_result_metrics.items()
     }
-    for key, value in expected_metrics.items():
+    for key, value in expected_max_metrics.items():
         assert data.metrics[key] == value

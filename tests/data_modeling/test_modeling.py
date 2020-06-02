@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pandas._testing import assert_frame_equal, assert_series_equal
 from sklearn.tree import DecisionTreeClassifier
 
@@ -36,7 +37,7 @@ def test_evaluate_cv_pipeline(
     test_pipeline,
     expected_X_train,
     expected_y_train,
-    expected_cv_result,
+    expected_cv_result_metrics,
 ):
     """
     1. Assert the fitted estimator is a DecisionTreeClassifier
@@ -48,10 +49,9 @@ def test_evaluate_cv_pipeline(
 
     assert isinstance(fitted_classifier, DecisionTreeClassifier)
 
-    expected_metrics = {
-        key: array
-        for key, array in expected_cv_result.items()
-        if key not in ["estimator", "fit_time", "score_time"]
-    }
-    for key, value in expected_metrics.items():
-        assert all(cv_results[key] == value)
+    for key, value in expected_cv_result_metrics.items():
+        assert np.allclose(cv_results[key], value)
+
+
+def test_evaluate_grid_search_pipeline():
+    assert False

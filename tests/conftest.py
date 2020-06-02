@@ -551,18 +551,17 @@ def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline):
 
 
 @pytest.fixture(scope="session")
-def expected_cv_result(test_pipeline, expected_X_train, expected_y_train):
-    cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
-    return cross_validate(
-        test_pipeline,
-        expected_X_train,
-        expected_y_train,
-        scoring=MICRO_CLASSIFIER_SCORING,
-        cv=cross_validation,
-        n_jobs=-1,
-        return_train_score=True,
-        return_estimator=True,
-    )
+def expected_cv_result_metrics(test_pipeline, expected_X_train, expected_y_train):
+    return {
+        "test_accuracy": np.array([0.95, 0.75, 0.8, 0.95, 0.95]),
+        "train_accuracy": np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
+        "test_precision": np.array([0.95, 0.75, 0.8, 0.95, 0.95]),
+        "train_precision": np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
+        "test_recall": np.array([0.95, 0.75, 0.8, 0.95, 0.95]),
+        "train_recall": np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
+        "test_f1": np.array([0.95, 0.75, 0.8, 0.95, 0.95]),
+        "train_f1": np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
+    }
 
 
 @pytest.fixture(scope="session")
