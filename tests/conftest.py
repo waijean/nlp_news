@@ -1,4 +1,5 @@
 from functools import lru_cache
+
 from data_modeling.mlrun import setup_mlflow
 import mlflow
 import pytest
@@ -6,7 +7,12 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.metrics import f1_score, make_scorer, recall_score, precision_score
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
+from sklearn.model_selection import (
+    train_test_split,
+    StratifiedKFold,
+    cross_validate,
+    GridSearchCV,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -31,6 +37,8 @@ from utils.constants import (
     MICRO_CLASSIFIER_SCORING,
     TEST_EXPERIMENT_NAME,
     TEST_RUN_NAME,
+    DEFAULT_CV,
+    ACCURACY,
 )
 
 
@@ -525,6 +533,15 @@ def test_pipeline():
 
 
 @pytest.fixture(scope="session")
+def test_param_grid():
+    return {
+        "scaler__with_mean": [True, False],
+        "classifier__criterion": ["gini", "entropy"],
+        "classifier__max_depth": [1, None],
+    }
+
+
+@pytest.fixture(scope="session")
 def test_fitted_classifier(expected_X_train, expected_y_train):
     clf = DecisionTreeClassifier(**CLF_PARAM)
     fitted_clf = clf.fit(expected_X_train, expected_y_train)
@@ -562,6 +579,22 @@ def expected_cv_result_metrics(test_pipeline, expected_X_train, expected_y_train
         "test_f1": np.array([0.95, 0.75, 0.8, 0.95, 0.95]),
         "train_f1": np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
     }
+
+
+@pytest.fixture(scope="session")
+def expected_gs(test_pipeline, test_param_grid, expected_X_train, expected_y_train):
+    gs = GridSearchCV(
+        estimator=test_pipeline,
+        param_grid=test_param_grid,
+        scoring=MICRO_CLASSIFIER_SCORING,
+        cv=DEFAULT_CV,
+        refit=ACCURACY,
+        n_jobs=-1,
+        verbose=1,
+        return_train_score=True,
+    )
+    gs = gs.fit(expected_X_train, expected_y_train)
+    return gs
 
 
 @pytest.fixture(scope="session")

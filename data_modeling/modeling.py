@@ -49,14 +49,14 @@ def evaluate_grid_search_pipeline(
     X_train: pd.DataFrame,
     y_train: pd.DataFrame,
     scoring: Dict,
+    cv,
     refit: str,
 ):
-    cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     gs = GridSearchCV(
         estimator=pipeline,
         param_grid=param_grid,
         scoring=scoring,
-        cv=cross_validation,
+        cv=cv,
         refit=refit,
         n_jobs=-1,
         verbose=1,

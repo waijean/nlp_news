@@ -2,10 +2,21 @@ import pandas as pd
 import numpy as np
 from pandas._testing import assert_frame_equal, assert_series_equal
 from sklearn.model_selection import StratifiedKFold
+from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeClassifier
 
-from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline
-from utils.constants import iris_X_COL, iris_y_COL, MICRO_CLASSIFIER_SCORING, DEFAULT_CV
+from data_modeling.modeling import (
+    load_and_split_data,
+    evaluate_cv_pipeline,
+    evaluate_grid_search_pipeline,
+)
+from utils.constants import (
+    iris_X_COL,
+    iris_y_COL,
+    MICRO_CLASSIFIER_SCORING,
+    DEFAULT_CV,
+    ACCURACY,
+)
 
 
 def test_load_data_from_tmp_dir(data_dir, iris_df):
@@ -34,11 +45,7 @@ def test_load_and_split_data(data_dir, expected_X_train, expected_y_train):
 
 
 def test_evaluate_cv_pipeline(
-    setup_mlflow_run,
-    test_pipeline,
-    expected_X_train,
-    expected_y_train,
-    expected_cv_result_metrics,
+    test_pipeline, expected_X_train, expected_y_train, expected_cv_result_metrics,
 ):
     """
     1. Assert the fitted estimator is a DecisionTreeClassifier
@@ -58,5 +65,26 @@ def test_evaluate_cv_pipeline(
         assert np.allclose(cv_results[key], value)
 
 
-# def test_evaluate_grid_search_pipeline():
-#     assert False
+def test_evaluate_grid_search_pipeline(
+    test_pipeline, test_param_grid, expected_X_train, expected_y_train, expected_gs
+):
+    best, cv_results = evaluate_grid_search_pipeline(
+        test_pipeline,
+        test_param_grid,
+        expected_X_train,
+        expected_y_train,
+        scoring=MICRO_CLASSIFIER_SCORING,
+        cv=DEFAULT_CV,
+        refit=ACCURACY,
+    )
+    for key, value in cv_results.items():
+        if key.startswith("param_"):
+            assert all(value == expected_gs.cv_results_[key])
+        if (key.startswith("mean_") or key.startswith("std_")) and not key.endswith(
+            "time"
+        ):
+            assert np.allclose(value, expected_gs.cv_results_[key])
+
+    assert best["params"] == expected_gs.best_params_
+    assert np.isclose(best["metrics"][ACCURACY], expected_gs.best_score_)
+    assert isinstance(best["fitted_classifier"], Pipeline)
