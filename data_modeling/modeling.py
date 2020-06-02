@@ -53,7 +53,7 @@ def evaluate_grid_search_pipeline(
 ):
     cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     gs = GridSearchCV(
-        pipeline=pipeline,
+        estimator=pipeline,
         param_grid=param_grid,
         scoring=scoring,
         cv=cross_validation,
