@@ -2,7 +2,7 @@ import pandas as pd
 from pandas._testing import assert_frame_equal, assert_series_equal
 from sklearn.tree import DecisionTreeClassifier
 
-from data_modeling.modeling import load_and_split_data, evaluate_pipeline
+from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline
 from utils.constants import iris_X_COL, iris_y_COL, MICRO_CLASSIFIER_SCORING
 
 
@@ -31,7 +31,7 @@ def test_load_and_split_data(data_dir, expected_X_train, expected_y_train):
     )
 
 
-def test_evaluate_pipeline(
+def test_evaluate_cv_pipeline(
     setup_mlflow_run,
     test_pipeline,
     expected_X_train,
@@ -47,7 +47,7 @@ def test_evaluate_pipeline(
     2. Check the metrics property in RunData (excluding certain keys such as "estimator", "fit_time" and "score_time")
     3. Assert file path exists in artifacts list
     """
-    fitted_classifier, cv_results = evaluate_pipeline(
+    fitted_classifier, cv_results = evaluate_cv_pipeline(
         test_pipeline, expected_X_train, expected_y_train, MICRO_CLASSIFIER_SCORING
     )
 

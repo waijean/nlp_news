@@ -18,7 +18,7 @@ def load_and_split_data(read_path: str, X_col: List[str], y_col: str):
     return X_train, X_test, y_train, y_test
 
 
-def evaluate_pipeline(
+def evaluate_cv_pipeline(
     pipeline: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame, scoring: Dict
 ):
     logger.info("Evaluating pipeline")

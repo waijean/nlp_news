@@ -24,7 +24,7 @@ from utils.constants import (
     CLASSIFIER,
     CLASSIFIER_SCORING,
 )
-from data_modeling.modeling import load_and_split_data, evaluate_pipeline
+from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline
 
 
 @dataclass
@@ -67,7 +67,7 @@ class CrossValidatePipeline:
             set_tags(self.X_col, self.y_col)
             log_params(self.params)
             log_pipeline(self.pipeline)
-            fitted_classifier, cv_results = evaluate_pipeline(
+            fitted_classifier, cv_results = evaluate_cv_pipeline(
                 self.pipeline, X_train, y_train, self.scoring
             )
             log_metrics(cv_results)
