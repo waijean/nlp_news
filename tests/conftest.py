@@ -1,5 +1,5 @@
 from functools import lru_cache
-
+from data_modeling.mlrun import setup_mlflow
 import mlflow
 import pytest
 import pandas as pd
@@ -30,6 +30,7 @@ from utils.constants import (
     CLASSIFIER_SCORING,
     MICRO_CLASSIFIER_SCORING,
     TEST_EXPERIMENT_NAME,
+    TEST_RUN_NAME,
 )
 
 
@@ -517,24 +518,32 @@ def X_tfidf_df():
 
 
 @pytest.fixture(scope="session")
-def pipeline():
+def test_pipeline():
     scaler = StandardScaler(**SCALER_PARAM)
     clf = DecisionTreeClassifier(**CLF_PARAM)
     return Pipeline([("scaler", scaler), (CLASSIFIER, clf)])
 
 
 @pytest.fixture(scope="session")
-def cross_validate_pipeline(data_dir, mlrun_dir, pipeline):
+def test_fitted_classifier(expected_X_train, expected_y_train):
+    clf = DecisionTreeClassifier(**CLF_PARAM)
+    fitted_clf = clf.fit(expected_X_train, expected_y_train)
+    return fitted_clf
+
+
+@pytest.fixture(scope="session")
+def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline):
     test_mlrun_dir = "file:" + str(mlrun_dir)
     read_path = data_dir / "iris.parquet"
 
     return CrossValidatePipeline(
         experiment_name=TEST_EXPERIMENT_NAME,
+        run_name=TEST_RUN_NAME,
         read_path=read_path,
         X_col=iris_X_COL,
         y_col=iris_y_COL,
         params=FULL_PARAM,
-        pipeline=pipeline,
+        pipeline=test_pipeline,
         scoring=MICRO_CLASSIFIER_SCORING,
         tracking_uri=test_mlrun_dir,
         artifact_location=test_mlrun_dir,
@@ -542,10 +551,10 @@ def cross_validate_pipeline(data_dir, mlrun_dir, pipeline):
 
 
 @pytest.fixture(scope="session")
-def cv_result(pipeline, expected_X_train, expected_y_train):
+def expected_cv_result(test_pipeline, expected_X_train, expected_y_train):
     cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     return cross_validate(
-        pipeline,
+        test_pipeline,
         expected_X_train,
         expected_y_train,
         scoring=MICRO_CLASSIFIER_SCORING,
@@ -557,8 +566,9 @@ def cv_result(pipeline, expected_X_train, expected_y_train):
 
 
 @pytest.fixture(scope="session")
-def setup_mlflow_experiment_id(cross_validate_pipeline):
-    return cross_validate_pipeline.setup_mlflow()
+def setup_mlflow_experiment_id(mlrun_dir):
+    test_mlrun_dir = "file:" + str(mlrun_dir)
+    return setup_mlflow(test_mlrun_dir, TEST_EXPERIMENT_NAME, test_mlrun_dir)
 
 
 @pytest.fixture(scope="session")

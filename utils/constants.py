@@ -84,7 +84,8 @@ TEST_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "test.db"
 MLRUN_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "mlrun.db")
 TEST_ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns/test")
 ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns")
-TEST_EXPERIMENT_NAME = "Pytest DecisionTree"
+TEST_EXPERIMENT_NAME = "Pytest"
+TEST_RUN_NAME = "DecisionTree"
 
 # mlrun tags
 X_COL = "X_col"
