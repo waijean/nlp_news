@@ -86,7 +86,7 @@ if __name__ == "__main__":
     pipeline = Pipeline([(VECTORIZER, vect), (CLASSIFIER, classifier)])
 
     CrossValidatePipeline(
-        experiment_name="News Title",
+        experiment_name="Cross Validate",
         run_name="SpacyVectorizer SVC",
         read_path=CLEANED_NEWS_TITLE_PATH,
         X_col=[COL_TITLE],
