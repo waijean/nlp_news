@@ -1,5 +1,7 @@
 from functools import lru_cache
+from typing import Dict, Any
 
+from data_modeling.grid_search_runner import GridSearchPipeline
 from data_modeling.mlrun import setup_mlflow
 import mlflow
 import pytest
@@ -22,7 +24,6 @@ from utils.constants import (
     COL_HEADLINE,
     COL_ARTICLE,
     COL_CATEGORY,
-    COL_DATE,
     COL_CLOSE,
     COL_VOLUME,
     COL_OPEN,
@@ -30,10 +31,6 @@ from utils.constants import (
     CLASSIFIER,
     iris_X_COL,
     iris_y_COL,
-    FULL_PARAM,
-    SCALER_PARAM,
-    CLF_PARAM,
-    CLASSIFIER_SCORING,
     MICRO_CLASSIFIER_SCORING,
     TEST_EXPERIMENT_NAME,
     TEST_RUN_NAME,
@@ -526,9 +523,40 @@ def X_tfidf_df():
 
 
 @pytest.fixture(scope="session")
-def test_pipeline():
-    scaler = StandardScaler(**SCALER_PARAM)
-    clf = DecisionTreeClassifier(**CLF_PARAM)
+def scaler_param():
+    return {"with_mean": True}
+
+
+@pytest.fixture(scope="session")
+def clf_param():
+    return {
+        "criterion": "gini",
+        "splitter": "random",
+        "max_depth": 20,
+        "random_state": 42,
+    }
+
+
+@pytest.fixture(scope="session")
+def full_param(scaler_param, clf_param):
+    full_param: Dict[str, Any] = {**scaler_param, **clf_param}
+    return full_param
+
+
+@pytest.fixture(scope="session")
+def test_metrics():
+    return {
+        "mean_test_accuracy": 0.66,
+        "std_test_accuracy": 0.018,
+        "mean_train_accuracy": 0.88,
+        "std_train_accuracy": 0.028,
+    }
+
+
+@pytest.fixture(scope="session")
+def test_pipeline(scaler_param, clf_param):
+    scaler = StandardScaler(**scaler_param)
+    clf = DecisionTreeClassifier(**clf_param)
     return Pipeline([("scaler", scaler), (CLASSIFIER, clf)])
 
 
@@ -542,14 +570,14 @@ def test_param_grid():
 
 
 @pytest.fixture(scope="session")
-def test_fitted_classifier(expected_X_train, expected_y_train):
-    clf = DecisionTreeClassifier(**CLF_PARAM)
+def test_fitted_classifier(expected_X_train, expected_y_train, clf_param):
+    clf = DecisionTreeClassifier(**clf_param)
     fitted_clf = clf.fit(expected_X_train, expected_y_train)
     return fitted_clf
 
 
 @pytest.fixture(scope="session")
-def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline):
+def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline, full_param):
     test_mlrun_dir = "file:" + str(mlrun_dir)
     read_path = data_dir / "iris.parquet"
 
@@ -559,8 +587,28 @@ def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline):
         read_path=read_path,
         X_col=iris_X_COL,
         y_col=iris_y_COL,
-        params=FULL_PARAM,
+        params=full_param,
         pipeline=test_pipeline,
+        scoring=MICRO_CLASSIFIER_SCORING,
+        tracking_uri=test_mlrun_dir,
+        artifact_location=test_mlrun_dir,
+    )
+
+
+@pytest.fixture(scope="session")
+def grid_search_pipeline(data_dir, mlrun_dir, test_pipeline, test_param_grid):
+    test_mlrun_dir = "file:" + str(mlrun_dir)
+    read_path = data_dir / "iris.parquet"
+
+    return GridSearchPipeline(
+        experiment_name=TEST_EXPERIMENT_NAME,
+        run_name=TEST_RUN_NAME,
+        read_path=read_path,
+        X_col=iris_X_COL,
+        y_col=iris_y_COL,
+        param_grid=test_param_grid,
+        pipeline=test_pipeline,
+        refit=ACCURACY,
         scoring=MICRO_CLASSIFIER_SCORING,
         tracking_uri=test_mlrun_dir,
         artifact_location=test_mlrun_dir,
@@ -598,13 +646,13 @@ def expected_gs(test_pipeline, test_param_grid, expected_X_train, expected_y_tra
     return gs
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def setup_mlflow_experiment_id(mlrun_dir):
     test_mlrun_dir = "file:" + str(mlrun_dir)
     return setup_mlflow(test_mlrun_dir, TEST_EXPERIMENT_NAME, test_mlrun_dir)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def setup_mlflow_run(setup_mlflow_experiment_id):
     with mlflow.start_run(experiment_id=setup_mlflow_experiment_id) as active_run:
         yield active_run

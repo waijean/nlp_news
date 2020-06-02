@@ -99,16 +99,6 @@ iris_X_COL = [
 ]
 iris_y_COL = "target"
 
-# mlrun params
-SCALER_PARAM = {"with_mean": True}
-CLF_PARAM = {
-    "criterion": "gini",
-    "splitter": "random",
-    "max_depth": 20,
-    "random_state": 42,
-}
-FULL_PARAM: Dict[str, Any] = {**SCALER_PARAM, **CLF_PARAM}
-
 # mlrun artifacts
 PIPELINE_HTML = "pipeline.html"
 SCORES_CSV = "scores.csv"
