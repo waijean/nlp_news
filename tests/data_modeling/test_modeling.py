@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 from pandas._testing import assert_frame_equal, assert_series_equal
+from sklearn.model_selection import StratifiedKFold
 from sklearn.tree import DecisionTreeClassifier
 
 from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline
-from utils.constants import iris_X_COL, iris_y_COL, MICRO_CLASSIFIER_SCORING
+from utils.constants import iris_X_COL, iris_y_COL, MICRO_CLASSIFIER_SCORING, DEFAULT_CV
 
 
 def test_load_data_from_tmp_dir(data_dir, iris_df):
@@ -44,7 +45,11 @@ def test_evaluate_cv_pipeline(
     2. Check the metrics property in RunData (excluding certain keys such as "estimator", "fit_time" and "score_time")
     """
     fitted_classifier, cv_results = evaluate_cv_pipeline(
-        test_pipeline, expected_X_train, expected_y_train, MICRO_CLASSIFIER_SCORING
+        test_pipeline,
+        expected_X_train,
+        expected_y_train,
+        MICRO_CLASSIFIER_SCORING,
+        DEFAULT_CV,
     )
 
     assert isinstance(fitted_classifier, DecisionTreeClassifier)
@@ -53,5 +58,5 @@ def test_evaluate_cv_pipeline(
         assert np.allclose(cv_results[key], value)
 
 
-def test_evaluate_grid_search_pipeline():
-    assert False
+# def test_evaluate_grid_search_pipeline():
+#     assert False

@@ -5,6 +5,7 @@ import git
 
 # price_df
 from sklearn.metrics import recall_score, f1_score, make_scorer, precision_score
+from sklearn.model_selection import StratifiedKFold
 
 COL_PRICE_DATE = "Date"
 COL_OPEN = "Open"
@@ -134,3 +135,4 @@ MICRO_CLASSIFIER_SCORING = {
 # cross validate constants
 VECTORIZER = "vectorizer"
 CLASSIFIER = "classifier"
+DEFAULT_CV = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)

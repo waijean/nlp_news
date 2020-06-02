@@ -24,16 +24,15 @@ def load_and_split_data(read_path: str, X_col: List[str], y_col: str):
 
 
 def evaluate_cv_pipeline(
-    pipeline: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame, scoring: Dict
+    pipeline: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame, scoring: Dict, cv
 ):
     logger.info("Evaluating pipeline")
-    cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     cv_results = cross_validate(
         estimator=pipeline,
         X=X_train,
         y=y_train,
         scoring=scoring,
-        cv=cross_validation,
+        cv=cv,
         n_jobs=-1,
         return_train_score=True,
         return_estimator=True,
@@ -50,6 +49,7 @@ def evaluate_grid_search_pipeline(
     X_train: pd.DataFrame,
     y_train: pd.DataFrame,
     scoring: Dict,
+    refit: str,
 ):
     cross_validation = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
     gs = GridSearchCV(
@@ -57,7 +57,7 @@ def evaluate_grid_search_pipeline(
         param_grid=param_grid,
         scoring=scoring,
         cv=cross_validation,
-        refit="accuracy",
+        refit=refit,
         n_jobs=-1,
         verbose=1,
         return_train_score=True,
@@ -65,7 +65,7 @@ def evaluate_grid_search_pipeline(
     gs = gs.fit(X_train, y_train)
     best = {
         "params": gs.best_params_,
-        "metrics": gs.best_score_,
+        "metrics": {refit: gs.best_score_},
         "fitted_classifier": gs.best_estimator_,
     }
     return best, gs.cv_results_

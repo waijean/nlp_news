@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Any
 
 import mlflow
+from sklearn.model_selection import StratifiedKFold
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
@@ -23,6 +24,7 @@ from utils.constants import (
     VECTORIZER,
     CLASSIFIER,
     CLASSIFIER_SCORING,
+    DEFAULT_CV,
 )
 from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline
 
@@ -51,6 +53,7 @@ class CrossValidatePipeline:
     params: Dict[str, Any]
     pipeline: Pipeline
     scoring: Dict = field(default_factory=CLASSIFIER_SCORING)
+    cv = DEFAULT_CV
     tracking_uri: str = MLRUN_SQL_DATABASE_PATH
     artifact_location: str = ARTIFACT_PATH
 
@@ -68,7 +71,7 @@ class CrossValidatePipeline:
             log_params(self.params)
             log_pipeline(self.pipeline)
             fitted_classifier, cv_results = evaluate_cv_pipeline(
-                self.pipeline, X_train, y_train, self.scoring
+                self.pipeline, X_train, y_train, self.scoring, self.cv
             )
             log_cv_metrics(cv_results)
             log_explainability(fitted_classifier, self.X_col)
