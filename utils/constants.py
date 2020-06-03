@@ -5,6 +5,7 @@ import git
 
 # price_df
 from sklearn.metrics import recall_score, f1_score, make_scorer, precision_score
+from sklearn.model_selection import StratifiedKFold
 
 COL_PRICE_DATE = "Date"
 COL_OPEN = "Open"
@@ -84,7 +85,8 @@ TEST_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "test.db"
 MLRUN_SQL_DATABASE_PATH = "sqlite://" + os.path.join(SQL_DATABASE_PATH, "mlrun.db")
 TEST_ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns/test")
 ARTIFACT_PATH = "file:" + os.path.join(ROOT_DIR_PATH, "mlruns")
-TEST_EXPERIMENT_NAME = "Pytest DecisionTree"
+TEST_EXPERIMENT_NAME = "Pytest"
+TEST_RUN_NAME = "DecisionTree"
 
 # mlrun tags
 X_COL = "X_col"
@@ -96,16 +98,6 @@ iris_X_COL = [
     "petal width (cm)",
 ]
 iris_y_COL = "target"
-
-# mlrun params
-SCALER_PARAM = {"with_mean": True}
-CLF_PARAM = {
-    "criterion": "gini",
-    "splitter": "random",
-    "max_depth": 20,
-    "random_state": 42,
-}
-FULL_PARAM: Dict[str, Any] = {**SCALER_PARAM, **CLF_PARAM}
 
 # mlrun artifacts
 PIPELINE_HTML = "pipeline.html"
@@ -133,3 +125,4 @@ MICRO_CLASSIFIER_SCORING = {
 # cross validate constants
 VECTORIZER = "vectorizer"
 CLASSIFIER = "classifier"
+DEFAULT_CV = StratifiedKFold(n_splits=5, random_state=0, shuffle=True)
