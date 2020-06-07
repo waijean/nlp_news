@@ -40,6 +40,17 @@ def set_tags(X_col: List[str], y_col: str):
     mlflow.set_tag(Y_COL, y_col)
 
 
+def get_params(pipeline: Pipeline):
+    logger.info("Getting params from pipeline")
+    full_params = pipeline.get_params(deep=True)
+    params = {
+        key: value
+        for key, value in full_params.items()
+        if key not in ["memory", "verbose"]
+    }
+    return params
+
+
 def log_params(params: Dict[str, Any]):
     logger.info("Logging params")
     mlflow.log_params(params)

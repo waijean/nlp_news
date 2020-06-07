@@ -8,6 +8,7 @@ from data_modeling.mlrun import (
     log_df_artifact,
     log_cv_metrics,
     log_metrics,
+    get_params,
 )
 from utils.constants import (
     X_COL,
@@ -29,12 +30,21 @@ def test_set_tags(setup_mlflow_run):
     assert data.tags[Y_COL] == f"{iris_y_COL}"
 
 
-def test_log_params(setup_mlflow_run, full_param):
-    log_params(full_param)
+def test_get_params(test_pipeline, full_params):
+    actual_full_params = get_params(test_pipeline)
+    actual_full_params_str = {
+        str(key): str(value) for key, value in actual_full_params.items()
+    }
+    full_params_str = {str(key): str(value) for key, value in full_params.items()}
+    assert actual_full_params_str == full_params_str
+
+
+def test_log_params(setup_mlflow_run, full_params):
+    log_params(full_params)
     client = mlflow.tracking.MlflowClient()
     data = client.get_run(setup_mlflow_run.info.run_id).data
     # the params property in RunData is a dictionary with keys and values as string
-    assert data.params == {str(key): str(value) for key, value in full_param.items()}
+    assert data.params == {str(key): str(value) for key, value in full_params.items()}
 
 
 def test_log_metrics(setup_mlflow_run, test_metrics):

@@ -538,9 +538,39 @@ def clf_param():
 
 
 @pytest.fixture(scope="session")
-def full_param(scaler_param, clf_param):
-    full_param: Dict[str, Any] = {**scaler_param, **clf_param}
-    return full_param
+def full_params():
+    return {
+        "steps": [
+            ("scaler", StandardScaler()),
+            (
+                "classifier",
+                DecisionTreeClassifier(
+                    max_depth=20, random_state=42, splitter="random"
+                ),
+            ),
+        ],
+        "scaler": StandardScaler(),
+        "classifier": DecisionTreeClassifier(
+            max_depth=20, random_state=42, splitter="random"
+        ),
+        "scaler__copy": True,
+        "scaler__with_mean": True,
+        "scaler__with_std": True,
+        "classifier__ccp_alpha": 0.0,
+        "classifier__class_weight": None,
+        "classifier__criterion": "gini",
+        "classifier__max_depth": 20,
+        "classifier__max_features": None,
+        "classifier__max_leaf_nodes": None,
+        "classifier__min_impurity_decrease": 0.0,
+        "classifier__min_impurity_split": None,
+        "classifier__min_samples_leaf": 1,
+        "classifier__min_samples_split": 2,
+        "classifier__min_weight_fraction_leaf": 0.0,
+        "classifier__presort": "deprecated",
+        "classifier__random_state": 42,
+        "classifier__splitter": "random",
+    }
 
 
 @pytest.fixture(scope="session")
@@ -577,7 +607,7 @@ def test_fitted_classifier(expected_X_train, expected_y_train, clf_param):
 
 
 @pytest.fixture(scope="session")
-def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline, full_param):
+def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline, full_params):
     test_mlrun_dir = "file:" + str(mlrun_dir)
     read_path = data_dir / "iris.parquet"
 
@@ -587,7 +617,6 @@ def cross_validate_pipeline(data_dir, mlrun_dir, test_pipeline, full_param):
         read_path=read_path,
         X_col=iris_X_COL,
         y_col=iris_y_COL,
-        params=full_param,
         pipeline=test_pipeline,
         scoring=MICRO_CLASSIFIER_SCORING,
         tracking_uri=test_mlrun_dir,

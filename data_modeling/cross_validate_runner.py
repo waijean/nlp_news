@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 import mlflow
 from sklearn.model_selection import StratifiedKFold
@@ -14,6 +14,7 @@ from data_modeling.mlrun import (
     log_cv_metrics,
     log_explainability,
     setup_mlflow,
+    get_params,
 )
 from utils.constants import (
     CLEANED_NEWS_TITLE_PATH,
@@ -50,8 +51,8 @@ class CrossValidatePipeline:
     read_path: str
     X_col: List
     y_col: str
-    params: Dict[str, Any]
     pipeline: Pipeline
+    params: Optional[Dict[str, Any]] = None
     scoring: Dict = field(default_factory=CLASSIFIER_SCORING)
     cv = DEFAULT_CV
     tracking_uri: str = MLRUN_SQL_DATABASE_PATH
@@ -68,6 +69,8 @@ class CrossValidatePipeline:
                 self.read_path, self.X_col, self.y_col
             )
             set_tags(self.X_col, self.y_col)
+            if self.params is None:
+                self.params = get_params(self.pipeline)
             log_params(self.params)
             log_pipeline(self.pipeline)
             fitted_classifier, cv_results = evaluate_cv_pipeline(
@@ -78,14 +81,9 @@ class CrossValidatePipeline:
 
 
 if __name__ == "__main__":
-    # create params
-    vect_param = {"ngram_range": (1, 1)}
-    clf_param = {"kernel": "linear"}
-    params: Dict[str, Any] = {**vect_param, **clf_param}
-
     # create estimator and pipeline
-    vect = SpacyVectorizer(**vect_param)
-    classifier = SVC(**clf_param)
+    vect = SpacyVectorizer({"ngram_range": (1, 1)})
+    classifier = SVC({"kernel": "linear"})
     pipeline = Pipeline([(VECTORIZER, vect), (CLASSIFIER, classifier)])
 
     CrossValidatePipeline(
@@ -94,6 +92,5 @@ if __name__ == "__main__":
         read_path=CLEANED_NEWS_TITLE_PATH,
         X_col=[COL_TITLE],
         y_col=COL_SIGN,
-        params=params,
         pipeline=pipeline,
     ).main()

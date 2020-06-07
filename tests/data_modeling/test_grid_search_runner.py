@@ -9,16 +9,16 @@ from utils.constants import FEATURE_IMPORTANCE_PLOT, TEST_EXPERIMENT_NAME
 def test_log_single_run(
     setup_mlflow_run,
     grid_search_pipeline,
-    full_param,
+    full_params,
     test_metrics,
     test_fitted_classifier,
 ):
     grid_search_pipeline.log_single_run(
-        full_param, test_metrics, test_fitted_classifier
+        full_params, test_metrics, test_fitted_classifier
     )
     client = mlflow.tracking.MlflowClient()
     data = client.get_run(setup_mlflow_run.info.run_id).data
-    assert data.params == {str(key): str(value) for key, value in full_param.items()}
+    assert data.params == {str(key): str(value) for key, value in full_params.items()}
     assert data.metrics == test_metrics
 
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
