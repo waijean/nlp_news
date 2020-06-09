@@ -10,7 +10,6 @@ from data_modeling.mlrun import (
     set_tags,
     log_params,
     log_pipeline,
-    log_cv_metrics,
     log_explainability,
     setup_mlflow,
     log_metrics,

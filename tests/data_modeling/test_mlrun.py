@@ -1,4 +1,5 @@
 import mlflow
+import numpy as np
 
 from data_modeling.mlrun import (
     set_tags,
@@ -98,7 +99,7 @@ def test_log_cv_metrics(setup_mlflow_run, expected_cv_result):
     client = mlflow.tracking.MlflowClient()
     data = client.get_run(setup_mlflow_run.info.run_id).data
     expected_metrics = {
-        key: max(array)
+        key: np.mean(array)
         for key, array in expected_cv_result.items()
         if key not in ["estimator", "fit_time", "score_time"]
     }

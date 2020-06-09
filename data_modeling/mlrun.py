@@ -2,6 +2,7 @@ import logging.config
 import os
 from typing import Dict, Any, List
 import pandas as pd
+import numpy as np
 
 import mlflow
 from mlflow.exceptions import MlflowException
@@ -70,13 +71,16 @@ def log_metrics(metrics: Dict[str, Any]):
 
 
 def log_cv_metrics(cv_results: Dict[str, Any]):
+    """
+    1. Log the average scores/fit time/score time across all folds as metric
+    2. Convert original cv results to dataframe and log the dataframe
+    """
     # remove estimator from cv_results dictionary to log metric and dataframe
     cv_results_without_estimator = {
         key: array for key, array in cv_results.items() if key != "estimator"
     }
     for key, array in cv_results_without_estimator.items():
-        for i, value in enumerate(array):
-            mlflow.log_metric(key, value, step=i + 1)
+        mlflow.log_metric(key, np.mean(array))
     log_df_artifact(pd.DataFrame(cv_results_without_estimator), SCORES_CSV)
 
 
