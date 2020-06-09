@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from pandas._testing import assert_frame_equal
 
-from utils.constants import FEATURE_IMPORTANCE_PLOT, TEST_EXPERIMENT_NAME
+from utils.constants import FEATURE_IMPORTANCE_PLOT, TEST_EXPERIMENT_NAME, TEST_RUN_NAME
 
 
 def test_log_single_run(
@@ -34,9 +34,9 @@ def test_log_child_runs(
     )
     query = f"tags.mlflow.parentRunId = '{setup_mlflow_run.info.run_id}'"
     runs_df_index = [
-        "params.scaler__with_mean",
-        "params.classifier__criterion",
-        "params.classifier__max_depth",
+        "params.standardscaler__with_mean",
+        "params.decisiontreeclassifier__criterion",
+        "params.decisiontreeclassifier__max_depth",
     ]
     runs_df = mlflow.search_runs(
         experiment_ids=setup_mlflow_experiment_id, filter_string=query
@@ -51,10 +51,10 @@ def test_log_child_runs(
     # remove metrics. from the column names to match expected_runs_df
     runs_df = runs_df.rename(lambda x: x[8:], axis="columns")
 
-    expected_runs_df_index = [
-        "param_scaler__with_mean",
-        "param_classifier__criterion",
-        "param_classifier__max_depth",
+    expected_runs_df_index = runs_df_index = [
+        "param_standardscaler__with_mean",
+        "param_decisiontreeclassifier__criterion",
+        "param_decisiontreeclassifier__max_depth",
     ]
     expected_runs_df = pd.DataFrame(expected_gs.cv_results_)
     # convert values in param columns to string before setting as index
@@ -77,5 +77,8 @@ def test_log_child_runs(
 def test_main(grid_search_pipeline):
     grid_search_pipeline.main()
     experiment_id = mlflow.get_experiment_by_name(TEST_EXPERIMENT_NAME).experiment_id
-    df = mlflow.search_runs(experiment_ids=experiment_id)
+    df = mlflow.search_runs(
+        experiment_ids=experiment_id,
+        filter_string=f"tags.mlflow.runName = '{TEST_RUN_NAME}'",
+    )
     assert all(df["status"].values == "FINISHED")

@@ -37,8 +37,10 @@ def evaluate_cv_pipeline(
         return_train_score=True,
         return_estimator=True,
     )
-    # extract the classifier of first pipeline from cv_results
-    fitted_classifier = cv_results["estimator"][0][CLASSIFIER]
+    # extract first pipeline from cv_results
+    fitted_pipeline = cv_results["estimator"][0]
+    # extract the last step from pipeline
+    fitted_classifier = fitted_pipeline[-1]
 
     return fitted_classifier, cv_results
 

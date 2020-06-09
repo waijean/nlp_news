@@ -15,7 +15,7 @@ from sklearn.model_selection import (
     cross_validate,
     GridSearchCV,
 )
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
@@ -541,35 +541,35 @@ def clf_param():
 def full_params():
     return {
         "steps": [
-            ("scaler", StandardScaler()),
+            ("standardscaler", StandardScaler()),
             (
-                "classifier",
+                "decisiontreeclassifier",
                 DecisionTreeClassifier(
                     max_depth=20, random_state=42, splitter="random"
                 ),
             ),
         ],
-        "scaler": StandardScaler(),
-        "classifier": DecisionTreeClassifier(
+        "standardscaler": StandardScaler(),
+        "decisiontreeclassifier": DecisionTreeClassifier(
             max_depth=20, random_state=42, splitter="random"
         ),
-        "scaler__copy": True,
-        "scaler__with_mean": True,
-        "scaler__with_std": True,
-        "classifier__ccp_alpha": 0.0,
-        "classifier__class_weight": None,
-        "classifier__criterion": "gini",
-        "classifier__max_depth": 20,
-        "classifier__max_features": None,
-        "classifier__max_leaf_nodes": None,
-        "classifier__min_impurity_decrease": 0.0,
-        "classifier__min_impurity_split": None,
-        "classifier__min_samples_leaf": 1,
-        "classifier__min_samples_split": 2,
-        "classifier__min_weight_fraction_leaf": 0.0,
-        "classifier__presort": "deprecated",
-        "classifier__random_state": 42,
-        "classifier__splitter": "random",
+        "standardscaler__copy": True,
+        "standardscaler__with_mean": True,
+        "standardscaler__with_std": True,
+        "decisiontreeclassifier__ccp_alpha": 0.0,
+        "decisiontreeclassifier__class_weight": None,
+        "decisiontreeclassifier__criterion": "gini",
+        "decisiontreeclassifier__max_depth": 20,
+        "decisiontreeclassifier__max_features": None,
+        "decisiontreeclassifier__max_leaf_nodes": None,
+        "decisiontreeclassifier__min_impurity_decrease": 0.0,
+        "decisiontreeclassifier__min_impurity_split": None,
+        "decisiontreeclassifier__min_samples_leaf": 1,
+        "decisiontreeclassifier__min_samples_split": 2,
+        "decisiontreeclassifier__min_weight_fraction_leaf": 0.0,
+        "decisiontreeclassifier__presort": "deprecated",
+        "decisiontreeclassifier__random_state": 42,
+        "decisiontreeclassifier__splitter": "random",
     }
 
 
@@ -587,15 +587,15 @@ def test_metrics():
 def test_pipeline(scaler_param, clf_param):
     scaler = StandardScaler(**scaler_param)
     clf = DecisionTreeClassifier(**clf_param)
-    return Pipeline([("scaler", scaler), (CLASSIFIER, clf)])
+    return make_pipeline(scaler, clf)
 
 
 @pytest.fixture(scope="session")
 def test_param_grid():
     return {
-        "scaler__with_mean": [True, False],
-        "classifier__criterion": ["gini", "entropy"],
-        "classifier__max_depth": [1, None],
+        "standardscaler__with_mean": [True, False],
+        "decisiontreeclassifier__criterion": ["gini", "entropy"],
+        "decisiontreeclassifier__max_depth": [1, None],
     }
 
 
