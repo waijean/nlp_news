@@ -102,6 +102,7 @@ iris_y_COL = "target"
 # mlrun artifacts
 PIPELINE_HTML = "pipeline.html"
 SCORES_CSV = "scores.csv"
+FEATURE_IMPORTANCE_CSV = "feature_importance.csv"
 FEATURE_IMPORTANCE_PLOT = "feature_importance_plot"
 
 # mlrun metrics

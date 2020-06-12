@@ -1,6 +1,6 @@
 import logging.config
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 import pandas as pd
 import numpy as np
 
@@ -18,6 +18,7 @@ from utils.constants import (
     PIPELINE_HTML,
     SCORES_CSV,
     FEATURE_IMPORTANCE_PLOT,
+    FEATURE_IMPORTANCE_CSV,
 )
 
 logging.config.fileConfig(fname=LOG_CONFIG_PATH, disable_existing_loggers=False)
@@ -84,7 +85,7 @@ def log_cv_metrics(cv_results: Dict[str, Any]):
     log_df_artifact(pd.DataFrame(cv_results_without_estimator), SCORES_CSV)
 
 
-def log_df_artifact(df: pd.DataFrame, filename: str):
+def log_df_artifact(df: Union[pd.DataFrame, pd.Series], filename: str):
     df.to_csv(filename)
     mlflow.log_artifact(filename)
     os.remove(filename)
@@ -102,6 +103,9 @@ def log_explainability(fitted_classifier, X_col):
             y=feature_importance.index,
             orientation="h",
             title="Feature Importance Plot",
+        )
+        log_df_artifact(
+            feature_importance.sort_values(ascending=False), FEATURE_IMPORTANCE_CSV
         )
         log_plotly_artifact(feature_importance_fig, FEATURE_IMPORTANCE_PLOT)
 

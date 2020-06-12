@@ -19,6 +19,7 @@ from utils.constants import (
     PIPELINE_HTML,
     FEATURE_IMPORTANCE_PLOT,
     SCORES_CSV,
+    FEATURE_IMPORTANCE_CSV,
 )
 
 
@@ -83,6 +84,7 @@ def test_log_explainability(setup_mlflow_run, test_fitted_classifier, expected_X
     artifacts = client.list_artifacts(setup_mlflow_run.info.run_id)
     artifacts_paths = [artifact.path for artifact in artifacts]
     assert FEATURE_IMPORTANCE_PLOT in artifacts_paths
+    assert FEATURE_IMPORTANCE_CSV in artifacts_paths
 
 
 def test_log_df_artifact(setup_mlflow_run, expected_X_train):

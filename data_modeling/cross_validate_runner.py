@@ -3,7 +3,7 @@ from typing import Dict, List, Any, Optional
 
 import mlflow
 from sklearn.model_selection import StratifiedKFold
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.svm import SVC
 
 from data_modeling.data_preprocessing.vectorize import SpacyVectorizer
@@ -52,8 +52,8 @@ class CrossValidatePipeline:
     X_col: List
     y_col: str
     pipeline: Pipeline
+    scoring: Dict
     params: Optional[Dict[str, Any]] = None
-    scoring: Dict = field(default_factory=CLASSIFIER_SCORING)
     cv = DEFAULT_CV
     tracking_uri: str = MLRUN_SQL_DATABASE_PATH
     artifact_location: str = ARTIFACT_PATH
@@ -82,9 +82,9 @@ class CrossValidatePipeline:
 
 if __name__ == "__main__":
     # create estimator and pipeline
-    vect = SpacyVectorizer({"ngram_range": (1, 1)})
-    classifier = SVC({"kernel": "linear"})
-    pipeline = Pipeline([(VECTORIZER, vect), (CLASSIFIER, classifier)])
+    vect = SpacyVectorizer(ngram_range=(1, 1))
+    classifier = SVC(kernel="linear")
+    pipeline = make_pipeline(vect, classifier)
 
     CrossValidatePipeline(
         experiment_name="Cross Validate",
@@ -92,5 +92,6 @@ if __name__ == "__main__":
         read_path=CLEANED_NEWS_TITLE_PATH,
         X_col=[COL_TITLE],
         y_col=COL_SIGN,
+        scoring=CLASSIFIER_SCORING,
         pipeline=pipeline,
     ).main()
