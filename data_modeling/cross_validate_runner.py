@@ -16,6 +16,7 @@ from data_modeling.mlrun import (
     setup_mlflow,
     get_params,
 )
+from data_modeling.scoring import CLASSIFIER_SCORING
 from utils.constants import (
     CLEANED_NEWS_TITLE_PATH,
     COL_TITLE,
@@ -24,7 +25,6 @@ from utils.constants import (
     ARTIFACT_PATH,
     VECTORIZER,
     CLASSIFIER,
-    CLASSIFIER_SCORING,
     DEFAULT_CV,
 )
 from data_modeling.modeling import load_and_split_data, evaluate_cv_pipeline

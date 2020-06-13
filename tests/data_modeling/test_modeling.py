@@ -10,10 +10,10 @@ from data_modeling.modeling import (
     evaluate_cv_pipeline,
     evaluate_grid_search_pipeline,
 )
+from data_modeling.scoring import MICRO_CLASSIFIER_SCORING
 from utils.constants import (
     iris_X_COL,
     iris_y_COL,
-    MICRO_CLASSIFIER_SCORING,
     DEFAULT_CV,
     ACCURACY,
 )

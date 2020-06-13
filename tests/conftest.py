@@ -20,6 +20,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
 from data_modeling.cross_validate_runner import CrossValidatePipeline
+from data_modeling.scoring import MICRO_CLASSIFIER_SCORING
 from utils.constants import (
     COL_HEADLINE,
     COL_ARTICLE,
@@ -31,7 +32,6 @@ from utils.constants import (
     CLASSIFIER,
     iris_X_COL,
     iris_y_COL,
-    MICRO_CLASSIFIER_SCORING,
     TEST_EXPERIMENT_NAME,
     TEST_RUN_NAME,
     DEFAULT_CV,

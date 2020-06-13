@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Any, Union
 
 import mlflow
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.svm import SVC
 
 from data_modeling.data_preprocessing.vectorize import SpacyVectorizer
@@ -14,6 +14,7 @@ from data_modeling.mlrun import (
     setup_mlflow,
     log_metrics,
 )
+from data_modeling.scoring import CLASSIFIER_SCORING
 from utils.constants import (
     CLEANED_NEWS_TITLE_PATH,
     COL_TITLE,
@@ -22,7 +23,6 @@ from utils.constants import (
     ARTIFACT_PATH,
     VECTORIZER,
     CLASSIFIER,
-    CLASSIFIER_SCORING,
     ACCURACY,
     DEFAULT_CV,
 )
@@ -57,7 +57,7 @@ class GridSearchPipeline:
     param_grid: Dict[str, Any]
     pipeline: Pipeline
     refit: str
-    scoring: Dict = field(default_factory=CLASSIFIER_SCORING)
+    scoring: Dict
     cv = DEFAULT_CV
     tracking_uri: str = MLRUN_SQL_DATABASE_PATH
     artifact_location: str = ARTIFACT_PATH
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # create estimator and pipeline
     vect = SpacyVectorizer()
     classifier = SVC()
-    pipeline = Pipeline([(VECTORIZER, vect), (CLASSIFIER, classifier)])
+    pipeline = make_pipeline(vect, classifier)
 
     GridSearchPipeline(
         experiment_name="Grid Search",
@@ -136,4 +136,5 @@ if __name__ == "__main__":
         param_grid=param_grid,
         pipeline=pipeline,
         refit=ACCURACY,
+        scoring=CLASSIFIER_SCORING,
     ).main()

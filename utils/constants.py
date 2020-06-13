@@ -110,18 +110,11 @@ ACCURACY = "accuracy"
 PRECISION = "precision"
 RECALL = "recall"
 F1 = "f1"
-CLASSIFIER_SCORING = {
-    ACCURACY: ACCURACY,
-    PRECISION: make_scorer(precision_score, average="binary"),
-    RECALL: make_scorer(recall_score, average="binary"),
-    F1: make_scorer(f1_score, average="binary"),
-}
-MICRO_CLASSIFIER_SCORING = {
-    ACCURACY: ACCURACY,
-    PRECISION: make_scorer(precision_score, average="micro"),
-    RECALL: make_scorer(recall_score, average="micro"),
-    F1: make_scorer(f1_score, average="micro"),
-}
+TP = "tp"
+TN = "tn"
+FP = "fp"
+FN = "fn"
+
 
 # cross validate constants
 VECTORIZER = "vectorizer"
