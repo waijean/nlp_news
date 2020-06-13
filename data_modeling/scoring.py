@@ -25,7 +25,7 @@ def fn(y_true, y_pred):
     return confusion_matrix(y_true, y_pred)[0, 1]
 
 
-CLASSIFIER_SCORING = {
+BINARY_CLASSIFIER_SCORING = {
     ACCURACY: ACCURACY,
     PRECISION: make_scorer(precision_score, average="binary"),
     RECALL: make_scorer(recall_score, average="binary"),

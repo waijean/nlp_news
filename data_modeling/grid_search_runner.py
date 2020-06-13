@@ -14,7 +14,7 @@ from data_modeling.mlrun import (
     setup_mlflow,
     log_metrics,
 )
-from data_modeling.scoring import CLASSIFIER_SCORING
+from data_modeling.scoring import BINARY_CLASSIFIER_SCORING
 from utils.constants import (
     CLEANED_NEWS_TITLE_PATH,
     COL_TITLE,
@@ -136,5 +136,5 @@ if __name__ == "__main__":
         param_grid=param_grid,
         pipeline=pipeline,
         refit=ACCURACY,
-        scoring=CLASSIFIER_SCORING,
+        scoring=BINARY_CLASSIFIER_SCORING,
     ).main()
